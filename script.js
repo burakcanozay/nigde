@@ -1,4 +1,4 @@
-const baslangic = new Date("2023-02-14T00:00:00"); // Kendi tarihinle değiştir
+const baslangic = new Date("2025-10-04T21:30:00"); // Kendi tarihinle değiştir
 
 function sayac() {
     const simdi = new Date();
