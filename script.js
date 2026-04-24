@@ -8,7 +8,7 @@ function sayac() {
     document.getElementById("counter").innerText = gun + " Gündür Beraberiz";
 }
 
-setInterval(sayac, 1000);
+setInterval(sayac, 2000);
 
 function mesajGoster() {
     alert("Seni dünyalar kadar seviyorum! ❤️");
