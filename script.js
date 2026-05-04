@@ -381,3 +381,54 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 });
+
+// ===== ZAMAN DUYARLI KARŞILAMA MODÜLÜ =====
+function updateTimeGreeting() {
+    const greetingElement = document.getElementById("timeGreeting");
+    if (!greetingElement) return;
+    
+    const now = new Date();
+    const hours = now.getHours();
+    
+    let greeting = "";
+    
+    // Saat aralıklarına göre mesaj seçimi
+    if (hours >= 5 && hours < 12) {
+        greeting = "Günaydın gün ışığım! ☀️";
+    } else if (hours >= 12 && hours < 18) {
+        greeting = "Tünaydın sevgilim! 🌸";
+    } else if (hours >= 18 && hours < 22) {
+        greeting = "İyi akşamlar birtanem! ✨";
+    } else {
+        greeting = "Hala uyumadın mı sevgilim? 🌙";
+    }
+    
+    // Mesaj değişiminde fade efekti
+    if (greetingElement.textContent !== greeting) {
+        greetingElement.style.opacity = "0";
+        greetingElement.style.transform = "translateX(-50%) translateY(-10px)";
+        
+        setTimeout(() => {
+            greetingElement.textContent = greeting;
+            greetingElement.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+            greetingElement.style.opacity = "1";
+            greetingElement.style.transform = "translateX(-50%) translateY(0)";
+        }, 300);
+    }
+}
+
+// Sayfa yüklendiğinde hemen çalıştır
+document.addEventListener("DOMContentLoaded", function () {
+    updateTimeGreeting(); // İlk çalıştırma
+    
+    // Saati güncelle (her dakika başında)
+    setInterval(updateTimeGreeting, 60000);
+});
+
+// Sayfa görünür olunca da güncelle (sekme değiştirildiğinde)
+document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) {
+        updateTimeGreeting();
+    }
+});
+// ===== ZAMAN DUYARLI KARŞILAMA MODÜLÜ SONU =====

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seni Seviyorum ❤️</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #4a4a4a;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 { color: #ff4d6d; }
+
+        .photo-frame {
+            width: 200px;
+            height: 200px;
+            background: #eee;
+            margin: 20px auto;
+            border-radius: 50%;
+            border: 5px solid #ff4d6d;
+            overflow: hidden;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff4d6d;
+            margin: 20px 0;
+        }
+
+        .message {
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .heart {
+            color: #ff4d6d;
+            font-size: 2rem;
+            animation: beat 1s infinite;
+        }
+
+        @keyframes beat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="heart">❤️</div>
+        <h1>İyi Ki Varsın!</h1>
+        
+        <div class="photo-frame">
+            <img src="https://via.placeholder.com/200" alt="Bizim Fotoğrafımız">
+        </div>
+
+        <div id="timer">Yükleniyor...</div>
+
+        <p class="message">
+            "Seninle geçen her an, benim en sevdiğim hikaye. Bu küçük site, sana olan sevgimin dijital bir yansıması olsun istedim."
+        </p>
+    </div>
+
+    <script>
+        // İLİŞKİ BAŞLANGIÇ TARİHİNİ BURAYA YAZ (Yıl, Ay-1, Gün)
+        // Örn: 14 Şubat 2023 için -> new Date(2023, 1, 14)
+        const startDate = new Date(2023, 1, 14); 
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+            document.getElementById('timer').innerHTML = 
+                `${days} Gün, ${hours} Saat, ${minutes} Dakikadır Birlikteyiz`;
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>

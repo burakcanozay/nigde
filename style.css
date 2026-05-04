@@ -871,3 +871,141 @@ body.dark-mode .close-btn:hover {
 body.dark-mode .heart-particle {
     opacity: 0.5;
 }
+
+/* ===== ZAMAN DUYARLI KARŞILAMA MODÜLÜ - LILA TEMA ===== */
+.time-greeting-container {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto 25px auto;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(196, 100, 230, 0.1));
+    border-radius: 16px;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    backdrop-filter: blur(10px);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: greetingFadeIn 0.8s cubic-bezier(0.55, 0.86, 0.45, 0.94) forwards;
+}
+
+.time-greeting {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    margin: 0 0 0 21ch;
+    padding: 0;
+    color: #7c3aed;
+    /* Parlak Lila Glow Efekti */
+    text-shadow: 
+        0 0 8px rgba(168, 85, 247, 0.6),
+        0 0 16px rgba(124, 58, 237, 0.5),
+        0 0 24px rgba(109, 40, 217, 0.4);
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+    font-style: italic;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+/* Koyu Modda Lila Parlaması Daha Belirgin ve Okunabilir */
+body.dark-mode .time-greeting-container {
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.2), rgba(138, 43, 226, 0.15));
+    border: 1px solid rgba(168, 85, 247, 0.4);
+}
+
+body.dark-mode .time-greeting {
+    color: #e6d7ff;
+    text-shadow: 
+        0 0 10px rgba(200, 162, 200, 0.8),
+        0 0 20px rgba(168, 85, 247, 0.7),
+        0 0 30px rgba(138, 43, 226, 0.5);
+}
+
+/* Fade-In Animasyonu */
+@keyframes greetingFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-15px);
+        filter: blur(4px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* Küçük Ekranlar İçin Responsive */
+@media (max-width: 768px) {
+    .time-greeting {
+        font-size: 1.3rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .time-greeting-container {
+        padding: 15px 20px;
+        margin-bottom: 20px;
+    }
+}
+
+/* ===== SPOTIFY MÜZİK ÇALAR MODÜLÜ ===== */
+.spotify-player-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 380px;
+    max-width: calc(100vw - 60px);
+    z-index: 30;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(196, 100, 230, 0.1));
+    border-radius: 18px;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(124, 58, 237, 0.25), 0 0 20px rgba(168, 85, 247, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.85;
+}
+
+.spotify-player-container:hover {
+    opacity: 1;
+    box-shadow: 0 12px 40px rgba(124, 58, 237, 0.35), 0 0 25px rgba(168, 85, 247, 0.3);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(196, 100, 230, 0.2));
+    transform: translateY(-5px);
+}
+
+/* Koyu Modda Spotify Çalar */
+body.dark-mode .spotify-player-container {
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.2), rgba(138, 43, 226, 0.15));
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(138, 43, 226, 0.25);
+}
+
+body.dark-mode .spotify-player-container:hover {
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.3), rgba(138, 43, 226, 0.25));
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(138, 43, 226, 0.35);
+}
+
+/* Mobil Cihazlarda Responsive */
+@media (max-width: 768px) {
+    .spotify-player-container {
+        width: calc(100vw - 40px);
+        bottom: 20px;
+        right: 20px;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .spotify-player-container {
+        width: calc(100vw - 30px);
+        bottom: 15px;
+        right: 15px;
+        padding: 10px;
+    }
+}
+
+/* ===== SPOTIFY MÜZİK ÇALAR MODÜLÜ SONU ===== */
+
+/* ===== ZAMAN DUYARLI KARŞILAMA MODÜLÜ SONU ===== */
