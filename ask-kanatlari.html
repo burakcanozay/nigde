@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aşk Kanatları | 🕊️💜</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #1e1b4b, #4c1d95);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* ─── Arka Plan Bulutları ─── */
+        .clouds-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .cloud {
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.2;
+            animation: moveClouds linear infinite;
+        }
+
+        @keyframes moveClouds {
+            from { transform: translateX(100vw); }
+            to { transform: translateX(-200px); }
+        }
+
+        /* ─── Oyun Ekranı ─── */
+        .game-wrapper {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .score-board {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #d8b4fe;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(192, 132, 252, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .canvas-container {
+            position: relative;
+            border: 4px solid rgba(192, 132, 252, 0.5);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(192, 132, 252, 0.3);
+            background: linear-gradient(to bottom, rgba(167, 139, 250, 0.1), rgba(76, 29, 149, 0.3));
+            transition: filter 0.5s ease;
+            
+            /* Ekrana Sığdırma Ayarları */
+            max-width: 100%;
+            max-height: 66vh;
+            aspect-ratio: 9 / 16;
+        }
+
+        /* Buğulanma (blur) efekti kaldırıldı */
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ─── Ölüm Ekranı Modali ─── */
+        .game-over-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            z-index: 10;
+        }
+
+        .game-over-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: rgba(30, 27, 75, 0.9);
+            border: 1px solid rgba(244, 114, 182, 0.4);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transform: scale(0.8);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(10px);
+            width: 80%;
+        }
+
+        .game-over-overlay.show .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #f472b6;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.6);
+        }
+
+        .controls-hint {
+            color: #a78bfa;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: -10px;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.06);
+            box-shadow: none;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- Arka plan bulutları -->
+    <div class="clouds-container" id="cloudsContainer"></div>
+
+    <div class="game-wrapper">
+        <div class="header">
+            <h1>Aşk Kanatları 🕊️</h1>
+        </div>
+
+        <div class="score-board">
+            Birlikte Geçen Günler: <span id="scoreDisplay">0</span>
+        </div>
+
+        <div class="canvas-container" id="canvasContainer">
+            <canvas id="gameCanvasHeart" width="360" height="480"></canvas>
+            
+            <div class="game-over-overlay" id="gameOverOverlay">
+                <div class="modal-box">
+                    <div class="modal-title">Aşkımız her zorluğu aşar, tekrar dene! 💜</div>
+                    <div style="font-size:1.2rem; color:#d8b4fe; margin-bottom:20px;">
+                        Ulaşılan Gün: <strong id="finalScore" style="color:#fff;">0</strong>
+                    </div>
+                    <button class="btn" onclick="resetGame()">Yeniden Başla 🔄</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-hint">
+            (Ekrana tıkla veya Boşluk tuşuna bas)
+        </div>
+
+        <a href="oyunlar.html" class="btn btn-secondary" style="margin-top: 10px;">🏠 Oyunlara Dön</a>
+    </div>
+
+    <script>
+        // ─── Arka Plan Bulutları Oluşturma ───
+        function createClouds() {
+            const container = document.getElementById('cloudsContainer');
+            for (let i = 0; i < 6; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud';
+                cloud.textContent = '☁️';
+                cloud.style.top = Math.random() * 80 + '%';
+                cloud.style.fontSize = (30 + Math.random() * 40) + 'px';
+                cloud.style.animationDuration = (20 + Math.random() * 20) + 's';
+                cloud.style.animationDelay = (Math.random() * 10) * -1 + 's';
+                container.appendChild(cloud);
+            }
+        }
+        createClouds();
+
+        // ─── Oyun Değişkenleri ───
+        const canvas = document.getElementById("gameCanvasHeart");
+        const ctx = canvas.getContext("2d");
+        const scoreDisplay = document.getElementById("scoreDisplay");
+        const finalScoreDisplay = document.getElementById("finalScore");
+        const gameOverOverlay = document.getElementById("gameOverOverlay");
+        const canvasContainer = document.getElementById("canvasContainer");
+
+        let frames = 0;
+        let score = 0;
+        let isGameOver = false;
+        let isGameStarted = false;
+
+        // Sevgilinin Fotoğrafı (Eğer yüklenemezse mor daire çizeceğiz)
+        const playerImg = new Image();
+        playerImg.src = 'flappybird.jpeg'; // <-- BURAYI KENDİ FOTOĞRAFINA GÖRE DEĞİŞTİREBİLİRSİN
+
+        const bird = {
+            x: 60,
+            y: 200,
+            radius: 18,
+            velocity: 0,
+            gravity: 0.15, // Yerçekimi azaltıldı (daha yavaş düşer)
+            jump: -4.5, // Zıplama gücü dengelendi
+            rotation: 0,
+
+            draw: function() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                
+                // Düşüş hızına göre rotasyon
+                this.rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, (this.velocity * 0.1)));
+                ctx.rotate(this.rotation);
+
+                if (playerImg.complete && playerImg.naturalWidth !== 0) {
+                    // Fotoğraf yüklendiyse yuvarlak maske içine çiz
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.radius + 2, 0, Math.PI * 2);
+                    ctx.closePath();
+                    
+                    // Hafif bir mor viynet/çerçeve
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#c084fc';
+                    ctx.stroke();
+
+                    ctx.clip(); // Resmi yuvarlak kesmek için
+                    ctx.drawImage(playerImg, -this.radius, -this.radius, this.radius * 2, this.radius * 2);
+                } else {
+                    // Fotoğraf yoksa yedek mor kalp şekli
+                    ctx.fillStyle = '#a855f7';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.fillStyle = 'white';
+                    ctx.font = '20px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('💜', 0, 0);
+                }
+                
+                ctx.restore();
+            },
+
+            update: function() {
+                if (!isGameStarted) return;
+                this.velocity += this.gravity;
+                this.y += this.velocity;
+
+                // Yere veya tavana çarpma kontrolü
+                if (this.y + this.radius >= canvas.height || this.y - this.radius <= 0) {
+                    gameOver();
+                }
+            },
+
+            flap: function() {
+                this.velocity = this.jump;
+            }
+        };
+
+        // Engeller (Sütunlar) Nesnesi
+        const pipes = {
+            array: [],
+            width: 50,
+            gap: 160, // Dikey geçiş boşluğu daha da genişletildi
+            dx: 1.5, // Sütunların geliş hızı yavaşlatıldı
+
+            draw: function() {
+                for (let i = 0; i < this.array.length; i++) {
+                    let p = this.array[i];
+                    
+                    // Gümüş rengi gradyan sütun
+                    let gradient = ctx.createLinearGradient(p.x, 0, p.x + this.width, 0);
+                    gradient.addColorStop(0, '#94a3b8');
+                    gradient.addColorStop(0.5, '#cbd5e1');
+                    gradient.addColorStop(1, '#94a3b8');
+                    ctx.fillStyle = gradient;
+
+                    // Üst Sütun
+                    ctx.fillRect(p.x, 0, this.width, p.top);
+                    
+                    // Sütunların uçlarına şık bir başlık (border)
+                    ctx.fillStyle = '#64748b';
+                    ctx.fillRect(p.x - 2, p.top - 15, this.width + 4, 15);
+
+                    // Alt Sütun
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(p.x, canvas.height - p.bottom, this.width, p.bottom);
+                    
+                    // Alt sütun başlığı
+                    ctx.fillStyle = '#64748b';
+                    ctx.fillRect(p.x - 2, canvas.height - p.bottom, this.width + 4, 15);
+                }
+            },
+
+            update: function() {
+                if (!isGameStarted) return;
+                // Her 130 karede bir yeni boru ekle (borular arası yatay mesafe açıldı)
+                if (frames % 130 === 0) {
+                    // Üst boru uzunluğu (Min: 50px, Max: canvas.height - gap - 50px)
+                    let maxPos = canvas.height - this.gap - 50;
+                    let topHeight = Math.floor(Math.random() * (maxPos - 50 + 1) + 50);
+                    let bottomHeight = canvas.height - topHeight - this.gap;
+                    
+                    this.array.push({
+                        x: canvas.width,
+                        top: topHeight,
+                        bottom: bottomHeight,
+                        passed: false
+                    });
+                }
+
+                for (let i = 0; i < this.array.length; i++) {
+                    let p = this.array[i];
+                    p.x -= this.dx;
+
+                    // Çarpışma Kontrolü
+                    // X Ekseni kesişimi
+                    if (bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.width) {
+                        // Y Ekseni kesişimi
+                        if (bird.y - bird.radius < p.top || bird.y + bird.radius > canvas.height - p.bottom) {
+                            gameOver();
+                        }
+                    }
+
+                    // Skoru Artır
+                    if (p.x + this.width < bird.x - bird.radius && !p.passed) {
+                        score++;
+                        scoreDisplay.textContent = score;
+                        p.passed = true;
+                    }
+
+                    // Ekrandan çıkanları sil
+                    if (p.x + this.width < 0) {
+                        this.array.shift();
+                        i--;
+                    }
+                }
+            },
+            
+            reset: function() {
+                this.array = [];
+            }
+        };
+
+        function drawBackground() {
+            // Arka planı temizle
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function gameOver() {
+            isGameOver = true;
+            finalScoreDisplay.textContent = score;
+            gameOverOverlay.classList.add("show");
+        }
+
+        function resetGame() {
+            bird.y = 200;
+            bird.velocity = 0;
+            bird.rotation = 0;
+            pipes.reset();
+            score = 0;
+            frames = 0;
+            scoreDisplay.textContent = score;
+            
+            isGameOver = false;
+            isGameStarted = false;
+            gameOverOverlay.classList.remove("show");
+            
+            loop();
+        }
+
+        // Ana Oyun Döngüsü
+        function loop() {
+            if (isGameOver) return;
+            
+            drawBackground();
+            pipes.draw();
+            pipes.update();
+            bird.draw();
+            bird.update();
+
+            if (isGameStarted) {
+                frames++;
+            }
+            requestAnimationFrame(loop);
+        }
+
+        // ─── Kontroller ───
+        function handleInput(e) {
+            if (isGameOver) return;
+            
+            // Boşluk tuşu sayfanın kaymasını önlesin
+            if(e.type === 'keydown' && e.code === 'Space') {
+                e.preventDefault();
+            }
+            
+            // Tıklama, dokunma veya boşluk tuşu ile zıpla
+            if (e.type === 'mousedown' || e.type === 'touchstart' || (e.type === 'keydown' && (e.code === 'Space' || e.code === 'ArrowUp'))) {
+                if (!isGameStarted) isGameStarted = true;
+                bird.flap();
+            }
+        }
+
+        canvas.addEventListener('mousedown', handleInput);
+        canvas.addEventListener('touchstart', handleInput, {passive: false});
+        document.addEventListener('keydown', handleInput);
+
+        let loopStarted = false;
+
+        function startLoop() {
+            if (!loopStarted) {
+                loopStarted = true;
+                requestAnimationFrame(loop);
+            }
+        }
+
+        // Fotoğrafın yüklenmesini bekle, yüklenmezse bile oyunu başlat
+        playerImg.onload = () => {
+            startLoop();
+        };
+        
+        playerImg.onerror = () => {
+            // Fotoğraf bulunamazsa yedek çizimle başlat
+            startLoop();
+        };
+
+        // Eğer resim çok hızlı önbellekten yüklenirse onload tetiklenmeyebilir
+        setTimeout(() => {
+            startLoop();
+        }, 500);
+
+    </script>
+</body>
+</html>

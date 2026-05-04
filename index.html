@@ -1,19 +1,113 @@
-<link rel="stylesheet" href="style.css">
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sana Özel | ❤️</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    <!-- Gece Modu Toggle Button -->
+    <button id="darkModeToggle" class="dark-mode-btn" title="Gece/Gündüz Modunu Değiştir">
+        <span class="btn-icon">🌙</span>
+    </button>
+
+    <!-- Gece Modu Yıldızları -->
+    <div id="starContainer" class="star-container"></div>
+
+    <!-- Gece Modu Mesajı -->
+    <div class="night-message">Sen benim karanlıktaki ışığımsın ✨</div>
+
     <div class="card">
         <div class="heart-icon">❤️</div>
-        <h1>Seni Çok Seviyom</h1>
+        <h1>İyi Ki Benimlesin</h1>
+
         <div id="counter">Hesaplanıyor...</div>
+
+        <div class="gallery">
+            <img src="foto1.jpeg" alt="Anı 1">
+            <img src="foto2.jpeg" alt="Anı 2">
+            <img src="foto3.jpeg" alt="Anı 3">
+            <img src="foto4.jpeg" alt="Anı 4">
+            <img src="foto5.jpeg" alt="Anı 5">
+            <img src="foto6.jpeg" alt="Anı 6">
+            <img src="foto7.jpeg" alt="Anı 7">
+            <img src="foto8.jpeg" alt="Anı 8">
+            <img src="foto9.jpeg" alt="Anı 9">
+            <img src="foto10.jpeg" alt="Anı 10">
+            <img src="foto11.jpeg" alt="Anı 11">
+            <img src="foto12.jpeg" alt="Anı 12">
+            <img src="foto13.jpeg" alt="Anı 13">
+            <img src="foto14.jpeg" alt="Anı 14">
+            <img src="foto15.jpeg" alt="Anı 15">
+        </div>
+
         <p>Seninle geçen her saniye çok kıymetli.</p>
-        <button onclick="mesajGoster()">Bana Tıkla</button>
+
+        <div class="question-box">
+            <h2>Beni Seviyor Musun?</h2>
+            <div class="action-buttons">
+                <button id="btnYes" onclick="loveYes()">Evet ❤️</button>
+                <button id="btnNo">Hayır 💔</button>
+            </div>
+        </div>
+
+        <!-- Oyunlar Linki -->
+        <div style="text-align:center; margin: 28px 0 8px;">
+            <a href="oyunlar.html" style="
+                display: inline-flex;
+                align-items: center;
+                gap: 14px;
+                background: linear-gradient(135deg, #a855f7, #ec4899);
+                color: white;
+                text-decoration: none;
+                padding: 20px 52px;
+                border-radius: 60px;
+                font-family: 'Outfit', sans-serif;
+                font-size: 1.25rem;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                box-shadow: 0 6px 28px rgba(168,85,247,0.55);
+                transition: transform 0.2s, box-shadow 0.2s;
+            " onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 30px rgba(168,85,247,0.65)'"
+                onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(168,85,247,0.45)'">
+                🎮 Oyunlar
+            </a>
+            <p style="color:#e4e4e4;font-size:0.8rem;margin-top:10px;">Beraber eğlenelim! 💜</p>
+        </div>
+
+        <!-- Kazı Kazan Oyunu -->
+        <div class="scratch-card-container">
+            <h3>Sürprizzzzz Aşağıda 🎁</h3>
+            <p class="scratch-instruction">Kazı cnm burayı❤️</p>
+            <div class="scratch-wrapper">
+                <!-- Kazındıktan sonra altta görünecek sürpriz içerik -->
+                <div class="scratch-content" id="scratchContent">
+                    <img src="foto1.jpeg" alt="Sürpriz Fotoğraf" class="scratch-image">
+                    <div class="scratch-message">Sonsuza dek seninle... 💜</div>
+                </div>
+                <!-- Üstteki kazınabilir katman -->
+                <canvas id="scratchCanvas"></canvas>
+            </div>
+        </div>
     </div>
- <script src="script.js"></script>
+
+    <!-- Modal Kutusu -->
+    <div id="imageModal" class="modal">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <button class="nav-btn prev-btn" onclick="prevImage()">&#10094;</button>
+        <button class="nav-btn next-btn" onclick="nextImage()">&#10095;</button>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Büyütülmüş Fotoğraf">
+            <textarea id="modalText"
+                placeholder="Bu fotoğrafla ilgili bir anı veya not yaz... (Yazdıkların otomatik kaydedilir)"
+                oninput="saveText()"></textarea>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
+
 </html>

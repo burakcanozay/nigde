@@ -1,28 +1,873 @@
-body {
-    background: linear-gradient(135deg, #ff9a9e 0%, #a600ff 100%);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
+/* Mor Rüya Tema Güncellemesi (Glassmorphism & Lavanta/Lila Tonları) */
+
+/* ===== CSS RENK VARİABLLERi ===== */
+:root {
+    /* AÇIK MOD — Aydınlık Violet-Mor Tema (koyu temayla uyumlu) */
+    --text-color: #2d1b69;
+    --title-color: #4c1d95;
+    --counter-color: #6d28d9;
+    --button-primary-1: #7c3aed;
+    --button-primary-2: #6d28d9;
+    --button-hover-1: #8b5cf6;
+    --button-hover-2: #7c3aed;
+    --button-secondary: #a78bfa;
+    --card-bg: rgba(109, 40, 217, 0.12);
+    --card-border: rgba(124, 58, 237, 0.4);
+    --card-border-light: rgba(139, 92, 246, 0.55);
+    --card-shadow: rgba(76, 29, 149, 0.25);
+    --card-shadow-light: rgba(109, 40, 217, 0.15);
+    --border-color: rgba(124, 58, 237, 0.3);
+    --scrollbar-track: rgba(109, 40, 217, 0.1);
+    --scrollbar-thumb: rgba(109, 40, 217, 0.4);
+    --scrollbar-thumb-hover: rgba(109, 40, 217, 0.7);
+    --img-border: rgba(124, 58, 237, 0.45);
+    --img-shadow: rgba(76, 29, 149, 0.25);
+    --img-shadow-light: rgba(109, 40, 217, 0.15);
+    --modal-bg: rgba(76, 29, 149, 0.5);
+    --modal-content-bg: rgba(109, 40, 217, 0.3);
+    --modal-border: rgba(139, 92, 246, 0.45);
+    --modal-shadow: rgba(76, 29, 149, 0.35);
+    --modal-text-bg: rgba(255, 255, 255, 0.2);
+    --modal-text-color: #1e0a4e;
+    --modal-text-placeholder: rgba(30, 10, 78, 0.45);
+    --close-btn-color: rgba(76, 29, 149, 0.85);
+    --close-btn-hover: #2d1b69;
+    --night-msg-bg: rgba(109, 40, 217, 0.18);
+    --night-msg-border: rgba(124, 58, 237, 0.4);
+    --night-msg-color: #2d1b69;
+    --dark-mode-btn-bg: rgba(109, 40, 217, 0.2);
+    --dark-mode-btn-border: rgba(124, 58, 237, 0.55);
+    --dark-mode-btn-hover-bg: rgba(109, 40, 217, 0.32);
+    --dark-mode-btn-shadow: rgba(109, 40, 217, 0.45);
 }
 
+body.dark-mode {
+    /* KOYU MOD (Dark Mode) - Koyu Mor Tema */
+    --bg-gradient-1: #0a0505;
+    --bg-gradient-2: #16213e;
+    --text-color: #e6e6fa;
+    --title-color: #e6e6fa;
+    --counter-color: #d8b4e2;
+    --button-primary-1: #9b59b6;
+    --button-primary-2: #6a0dad;
+    --button-hover-1: #a86cc1;
+    --button-hover-2: #7b1fa2;
+    --button-secondary: #553c60;
+    --card-bg: rgba(20, 5, 35, 0.35);
+    --card-border: rgba(100, 50, 150, 0.3);
+    --card-border-light: rgba(100, 50, 150, 0.2);
+    --card-shadow: rgba(0, 0, 0, 0.6);
+    --card-shadow-light: rgba(99, 39, 120, 0.3);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --scrollbar-track: rgba(0, 0, 0, 0.2);
+    --scrollbar-thumb: rgba(155, 89, 182, 0.5);
+    --scrollbar-thumb-hover: rgba(155, 89, 182, 0.8);
+    --img-border: rgba(255, 255, 255, 0.2);
+    --img-shadow: rgba(0, 0, 0, 0.4);
+    --img-shadow-light: rgba(155, 89, 182, 0.15);
+    --modal-bg: rgba(10, 2, 15, 0.85);
+    --modal-content-bg: rgba(30, 10, 45, 0.4);
+    --modal-border: rgba(255, 255, 255, 0.15);
+    --modal-shadow: rgba(0, 0, 0, 0.5);
+    --modal-text-bg: rgba(0, 0, 0, 0.3);
+    --modal-text-color: #e6e6fa;
+    --modal-text-placeholder: rgba(230, 230, 250, 0.5);
+    --close-btn-color: rgba(255, 255, 255, 0.7);
+    --close-btn-hover: #fff;
+    --night-msg-bg: rgba(30, 10, 45, 0.6);
+    --night-msg-border: rgba(255, 255, 255, 0.2);
+    --night-msg-color: #e6e6fa;
+    --dark-mode-btn-bg: rgba(255, 255, 255, 0.1);
+    --dark-mode-btn-border: rgba(255, 255, 255, 0.2);
+    --dark-mode-btn-hover-bg: rgba(255, 255, 255, 0.2);
+    --dark-mode-btn-shadow: rgba(255, 255, 255, 0.3);
+}
+
+/* ===== GLOBAL AKIŞLI GEÇİŞ — tüm renkler kayarak değişsin ===== */
+*,
+*::before,
+*::after {
+    transition:
+        background-color 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.9s ease;
+}
+
+/* ===== AÇIK MOD (Light Mode) ===== */
+body {
+    /* Aydınlık mor — koyu temayla uyumlu gündüz rengi */
+    background: radial-gradient(circle at 25% 15%, #ede9fe 0%, #8b5cf6 50%, #6d28d9 100%);
+    background-attachment: fixed; /* Kaydırınca arka plan sabit kalsın */
+    min-height: 125vh; /* zoom: 0.8 olduğu için 100/0.8 = 125 */
+    width: 125vw;
+    display: flex;
+    justify-content: center;
+    padding: 60px 0; /* İçerik uzadıkça üstten kesilmemesi için padding */
+    box-sizing: border-box;
+    margin: 0;
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-y: auto; /* Site artık aşağı kaydırılabilir */
+    overflow-x: hidden;
+    position: relative;
+    zoom: 0.8; /* Tarayıcıdaki %80 görünümü varsayılan yapar */
+}
+
+/* Koyu mor arka plan katmanı — başta görünmez, dark modda üzerine SOLARAK gelir */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 30% 20%, #1a0530 0%, #0d0120 40%, #07010f 100%);
+    opacity: 0;
+    transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+    /* tüm içeriklerin arkasında */
+    pointer-events: none;
+}
+
+body.dark-mode::before {
+    opacity: 1;
+}
+
+/* Dinamik Kalp Efekti */
+.heart-particle {
+    position: fixed;
+    bottom: -10vh;
+    z-index: 0;
+    pointer-events: none;
+    animation: floatUp linear forwards;
+}
+
+.heart-particle.explosion {
+    position: absolute;
+    bottom: auto;
+    animation: none;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.3);
+    }
+
+    15% {
+        opacity: 0.7;
+        transform: translateY(-15vh) scale(1);
+    }
+
+    85% {
+        opacity: 0.7;
+        transform: translateY(-85vh) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-110vh) scale(0.5);
+    }
+}
+
+/* Glassmorphism Kart Efekti */
 .card {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 40px;
-    border-radius: 30px;
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 24px;
     text-align: center;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 32px 0 var(--card-shadow), 0 0 20px var(--card-shadow-light);
+    border: 2px solid var(--card-border);
+    border-top: 2px solid var(--card-border-light);
+    border-left: 2px solid var(--card-border-light);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    width: 98%;
+    max-width: 1300px !important;
+    margin: 20px auto;
+    position: relative;
+    z-index: 10;
+    transition: all 0.8s ease;
+    overflow: hidden;
+}
+
+.card h1 {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+    color: var(--title-color);
+    text-shadow: 0 0 8px rgba(200, 100, 230, 0.3);
+    transition: color 0.8s ease;
+}
+
+#counter {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: var(--counter-color);
+    font-weight: 500;
+    transition: color 0.8s ease;
 }
 
 button {
-    background: #ff4d6d;
+    background: linear-gradient(135deg, var(--button-primary-1), var(--button-primary-2));
     color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    padding: 10px 22px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.8s ease;
+    backdrop-filter: blur(5px);
 }
 
-button:hover { transform: scale(1.1); }
+button:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 5px 15px var(--card-border);
+    background: linear-gradient(135deg, var(--button-hover-1), var(--button-hover-2));
+}
+
+/* Soru Bölümü Stilleri */
+.question-box {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid var(--border-color);
+}
+
+.question-box h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: var(--title-color);
+    text-shadow: 0 0 8px rgba(200, 100, 230, 0.2);
+    transition: color 0.8s ease;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    min-height: 42px;
+}
+
+#btnNo {
+    background: linear-gradient(135deg, #2c3e50, #000000);
+    color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    transition: all 0.15s ease-out !important; /* Kaçma hızını arttırmak için süreyi kısalttım */
+}
+
+#btnNo:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #34495e, #111111);
+}
+
+/* Galeri Düzeni */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 28px;
+    margin: 20px 0;
+    max-height: 55vh;
+    overflow-y: auto;
+    overflow-x: visible;
+    padding: 20px 12px 12px 12px; /* üstten ekstra boşluk — hover'da üst fotoğraflar kesilmez */
+    /* Scrollbar tasarımı - Mor konsepte uygun */
+}
+
+.gallery::-webkit-scrollbar {
+    width: 12px; /* Daha kalın ve tutması kolay */
+}
+
+.gallery::-webkit-scrollbar-track {
+    background: rgba(139, 92, 246, 0.15);
+    border-radius: 10px;
+}
+
+.gallery::-webkit-scrollbar-thumb {
+    background: rgba(91, 33, 182, 0.85); /* Koyu patlıcan moru */
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.gallery::-webkit-scrollbar-thumb:hover {
+    background: rgba(76, 29, 149, 1); /* Daha da koyu mor */
+}
+
+.gallery img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 14px;
+    /* Açık mor kenarlığı */
+    border: 2px solid rgba(200, 100, 230, 0.3);
+    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.15), 0 2px 8px rgba(200, 100, 230, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: center;
+}
+
+/* Masaya atılmış fotoğraf havası - her birine farklı açı */
+.gallery img:nth-child(1) {
+    transform: rotate(-3deg);
+}
+
+.gallery img:nth-child(2) {
+    transform: rotate(2deg);
+}
+
+.gallery img:nth-child(3) {
+    transform: rotate(-2.5deg);
+}
+
+.gallery img:nth-child(4) {
+    transform: rotate(3deg);
+}
+
+.gallery img:nth-child(5) {
+    transform: rotate(-1.5deg);
+}
+
+.gallery img:nth-child(6) {
+    transform: rotate(2.5deg);
+}
+
+.gallery img:nth-child(7) {
+    transform: rotate(-3.5deg);
+}
+
+.gallery img:nth-child(8) {
+    transform: rotate(1.5deg);
+}
+
+.gallery img:nth-child(9) {
+    transform: rotate(-2deg);
+}
+
+.gallery img:nth-child(10) {
+    transform: rotate(2.8deg);
+}
+
+.gallery img:nth-child(11) {
+    transform: rotate(-3.2deg);
+}
+
+.gallery img:nth-child(12) {
+    transform: rotate(1.2deg);
+}
+
+.gallery img:nth-child(13) {
+    transform: rotate(-2.8deg);
+}
+
+.gallery img:nth-child(14) {
+    transform: rotate(3.1deg);
+}
+
+.gallery img:nth-child(15) {
+    transform: rotate(-1.8deg);
+}
+
+/* Fotoğrafın üzerine gelince büyüme efekti */
+.gallery img:hover {
+    transform: scale(1.1) translateY(-8px) rotate(0deg);
+    z-index: 2;
+    border-color: rgba(200, 100, 230, 0.6);
+    box-shadow: 0 15px 35px rgba(200, 100, 230, 0.3), 0 5px 12px rgba(200, 100, 230, 0.15);
+}
+
+/* Modal (Büyütülmüş Fotoğraf) Stilleri */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* Açık mod: Premium derinlikli glassmorphism arka plan */
+    background: radial-gradient(circle at center, rgba(167, 139, 250, 0.45) 0%, rgba(88, 28, 135, 0.85) 100%);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: background 0.8s ease, backdrop-filter 0.8s ease;
+}
+
+.modal-content {
+    /* Açık mod: Şeffaf buzlu cam görünümü */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 20px 50px rgba(76, 29, 149, 0.4), 0 0 30px rgba(167, 139, 250, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.8);
+    border-left: 1px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.6s ease;
+}
+
+#modalImage {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 12px;
+    object-fit: contain;
+    /* Açık border */
+    border: 2px solid rgba(200, 100, 230, 0.3);
+    box-shadow: 0 5px 25px rgba(138, 43, 226, 0.2);
+    transition: transform 0.15s ease-out;
+}
+
+#modalText {
+    width: 100%;
+    min-width: 280px;
+    height: 85px;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    /* Açık mod text area */
+    border: 2px solid rgba(200, 100, 230, 0.3);
+    background: rgba(255, 255, 255, 0.5);
+    color: #5a3f6b;
+    font-family: inherit;
+    font-size: 15px;
+    resize: none;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#modalText::placeholder {
+    color: rgba(90, 63, 107, 0.5);
+}
+
+#modalText:focus {
+    border-color: rgba(200, 100, 230, 0.6);
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px rgba(200, 100, 230, 0.3);
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: rgba(106, 45, 127, 0.7);
+    font-size: 45px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px rgba(200, 100, 230, 0.3);
+}
+
+.close-btn:hover {
+    color: #6a2d7f;
+    transform: scale(1.1) rotate(90deg);
+}
+
+/* Modal Navigasyon Butonları (Önceki/Sonraki) */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 105;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.nav-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.prev-btn {
+    left: 40px;
+}
+
+.next-btn {
+    right: 40px;
+}
+
+/* Mobilde ok butonlarını biraz küçültelim */
+@media (max-width: 768px) {
+    .nav-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+    }
+    .prev-btn { left: 15px; }
+    .next-btn { right: 15px; }
+}
+
+/* ===== GECE MODU STİLLERİ ===== */
+
+/* ===== TEMA DEĞİŞTİRME BUTONU ===== */
+.dark-mode-btn {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 9999;
+    background: rgba(200, 100, 230, 0.18);
+    border: 2px solid rgba(200, 100, 230, 0.5);
+    border-radius: 50%;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    font-size: 22px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.4s ease,
+        background 0.9s ease !important;
+    box-shadow: 0 4px 15px rgba(200, 100, 230, 0.25);
+    user-select: none;
+}
+
+/* Emoji kısmı dönüş animasyonu */
+.dark-mode-btn .btn-icon {
+    display: inline-block;
+    line-height: 1;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.dark-mode-btn:hover {
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(200, 100, 230, 0.5);
+    background: rgba(200, 100, 230, 0.28);
+}
+
+.dark-mode-btn:hover .btn-icon {
+    transform: rotate(30deg) scale(1.15);
+}
+
+body.dark-mode .dark-mode-btn {
+    background: rgba(155, 89, 182, 0.2);
+    border: 2px solid rgba(155, 89, 182, 0.4);
+    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+}
+
+body.dark-mode .dark-mode-btn:hover {
+    background: rgba(155, 89, 182, 0.35);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5);
+}
+
+/* Yıldız Konteyner */
+.star-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.star-container.active {
+    opacity: 1;
+}
+
+/* Yıldızlar */
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+}
+
+/* Yıldız Kıpıldama Animasyonu */
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ===== KAZI KAZAN OYUNU ===== */
+.scratch-card-container {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px var(--card-shadow);
+    text-align: center;
+}
+
+.scratch-card-container h3 {
+    margin: 0 0 10px 0;
+    color: var(--title-color);
+    font-size: 22px;
+}
+
+.scratch-instruction {
+    font-size: 14px;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+.scratch-wrapper {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--img-border);
+}
+
+.scratch-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+}
+
+.scratch-image {
+    width: 80%;
+    height: 75%;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 2px solid var(--img-border);
+}
+
+.scratch-message {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--title-color);
+    text-shadow: 0 1px 3px rgba(255,255,255,0.8);
+}
+
+#scratchCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    cursor: pointer;
+    touch-action: none; /* Mobilde scroll'u engeller */
+}
+
+/* Gece Modu Mesajı */
+.night-message {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(200, 100, 230, 0.2);
+    border: 1px solid rgba(200, 100, 230, 0.3);
+    padding: 12px 25px;
+    border-radius: 30px;
+    color: #6a2d7f;
+    font-size: 14px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    z-index: 50;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+    box-shadow: 0 5px 20px rgba(138, 43, 226, 0.1);
+}
+
+.night-message.active {
+    opacity: 1;
+}
+
+/* Dark mode'da night message */
+body.dark-mode .night-message {
+    background: rgba(30, 10, 45, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e6e6fa;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== DARK MODE (Koyu Mod) ===== */
+body.dark-mode {
+    /* Arka plan artık body::before üzerinden opacity ile geçiş yapıyor */
+    color: #e6e6fa;
+}
+
+body.dark-mode .card {
+    background: rgba(20, 5, 35, 0.35);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), 0 0 30px rgba(99, 39, 120, 0.3);
+    border: 1px solid rgba(100, 50, 150, 0.3);
+}
+
+body.dark-mode .card h1 {
+    color: #e6e6fa;
+    text-shadow: 0 0 15px rgba(155, 89, 182, 0.5);
+}
+
+body.dark-mode #counter {
+    color: #d8b4e2;
+}
+
+body.dark-mode .question-box h2 {
+    color: #e6e6fa;
+    text-shadow: 0 0 12px rgba(155, 89, 182, 0.6);
+}
+
+body.dark-mode .question-box {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode button {
+    background: linear-gradient(135deg, #9b59b6, #6a0dad);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode button:hover {
+    box-shadow: 0 5px 15px rgba(155, 89, 182, 0.5);
+    background: linear-gradient(135deg, #a14ec4, #7b1fa2);
+}
+
+body.dark-mode #btnNo {
+    background: linear-gradient(135deg, #1a1a1a, #000000);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cccccc;
+}
+
+body.dark-mode #btnNo:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+    background: linear-gradient(135deg, #2a2a2a, #050505);
+}
+
+body.dark-mode .gallery::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .gallery::-webkit-scrollbar-thumb {
+    background: rgba(107, 33, 168, 0.9); /* Koyu gece moru */
+    border: 2px solid rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .gallery::-webkit-scrollbar-thumb:hover {
+    background: rgba(88, 28, 135, 1);
+}
+
+body.dark-mode .gallery img {
+    border: 1.5px solid rgba(139, 92, 246, 0.3);
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.5),
+        0 0 0 0px rgba(139, 92, 246, 0);
+    transition:
+        transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        box-shadow 0.4s ease,
+        border-color 0.4s ease;
+}
+
+body.dark-mode .scratch-card-container {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .scratch-content {
+    background: rgba(30, 10, 45, 0.7);
+}
+
+body.dark-mode .scratch-message {
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+body.dark-mode .gallery img:hover {
+    border-color: rgba(167, 139, 250, 0.85);
+    box-shadow:
+        /* dış aura — geniş ve yumuşak */
+        0 0 30px rgba(139, 92, 246, 0.35),
+        /* orta parlama */
+        0 0 15px rgba(167, 139, 250, 0.5),
+        /* iç kılıf — çerçeve ışığı */
+        0 0 0 2px rgba(139, 92, 246, 0.45),
+        /* derinlik gölgesi */
+        0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .modal {
+    background: radial-gradient(circle at center, rgba(30, 10, 45, 0.65) 0%, rgba(5, 1, 10, 0.95) 100%);
+}
+
+body.dark-mode .modal-content {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(138, 43, 226, 0.3);
+}
+
+body.dark-mode #modalImage {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode #modalText {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.3);
+    color: #e6e6fa;
+}
+
+body.dark-mode #modalText::placeholder {
+    color: rgba(230, 230, 250, 0.5);
+}
+
+body.dark-mode #modalText:focus {
+    border-color: rgba(200, 162, 200, 0.6);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 15px rgba(155, 89, 182, 0.3);
+}
+
+body.dark-mode .close-btn {
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .close-btn:hover {
+    color: #fff;
+}
+
+body.dark-mode .heart-particle {
+    opacity: 0.5;
+}

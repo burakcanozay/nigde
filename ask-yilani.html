@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aşk Yılanı | 🐍❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0d0d1a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 30px 20px 60px;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* ─── Arka plan parçacıkları ─── */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            font-size: 18px;
+            animation: floatUp linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.6;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stats-board {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(192, 132, 252, 0.2);
+            padding: 15px 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .level-text {
+            font-size: 1.1rem;
+            color: #d8b4fe;
+            font-weight: 600;
+        }
+
+        .score-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f472b6;
+        }
+
+        .canvas-container {
+            position: relative;
+            z-index: 1;
+            padding: 10px;
+            background: rgba(30, 27, 75, 0.6);
+            border: 2px solid rgba(192, 132, 252, 0.4);
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
+            transition: box-shadow 0.3s;
+        }
+
+        .canvas-container.glow {
+            box-shadow: 0 0 60px rgba(244, 114, 182, 0.6);
+            border-color: rgba(244, 114, 182, 0.8);
+        }
+
+        canvas {
+            display: block;
+            border-radius: 6px;
+            background-image: linear-gradient(rgba(192, 132, 252, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(192, 132, 252, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .notification {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: 800;
+            color: #f472b6;
+            text-shadow: 0 0 20px rgba(244, 114, 182, 0.8);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            text-align: center;
+            width: 100%;
+        }
+
+        .notification.show {
+            animation: popUp 2s forwards;
+        }
+
+        @keyframes popUp {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -30%) scale(0.8);
+            }
+
+            20% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+
+            80% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -70%) scale(0.9);
+            }
+        }
+
+        /* Modal Overlay */
+        .game-over-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .game-over-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: linear-gradient(135deg, #1e1b4b, #2d1b69);
+            border: 1px solid rgba(192, 132, 252, 0.4);
+            border-radius: 28px;
+            padding: 40px 50px;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(168, 85, 247, 0.4);
+            transform: scale(0.8);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .game-over-overlay.show .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-emoji {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: block;
+            animation: heartbreak 2s infinite alternate;
+        }
+
+        @keyframes heartbreak {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1.1);
+            }
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            color: #e2e8f0;
+            margin-bottom: 10px;
+        }
+
+        .modal-score {
+            font-size: 1.5rem;
+            color: #f472b6;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 15px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .controls-hint {
+            margin-top: 15px;
+            color: #9ca3af;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="header">
+        <h1>Aşk Yılanı 🐍❤️</h1>
+    </div>
+
+    <div class="stats-board">
+        <div class="level-text" id="levelText">Henüz yolun başındayız...</div>
+        <div class="score-display">Sevgi Seviyesi: <span id="score">0</span></div>
+    </div>
+
+    <div class="canvas-container" id="canvasContainer">
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <div class="notification" id="notification">Aşkımız güçleniyor! 💘</div>
+    </div>
+
+    <div class="controls-hint">
+        Klavye Yön Tuşları (⬅️ ⬆️ ⬇️ ➡️) veya WASD ile yılanı yönlendir!
+    </div>
+
+    <div style="margin-top: 25px;">
+        <a href="oyunlar.html" class="btn btn-secondary">🏠 Oyunlara Dön</a>
+    </div>
+
+    <div class="game-over-overlay" id="gameOverOverlay">
+        <div class="modal-box">
+            <span class="modal-emoji">🥺</span>
+            <div class="modal-title">Aşkımız asla bitmez!</div>
+            <div class="modal-score">Ulaşılan Seviye: <span id="finalScore">0</span></div>
+            <button class="btn" onclick="resetGame()">Hadi Tekrar Dene 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const scoreElement = document.getElementById("score");
+        const levelTextElement = document.getElementById("levelText");
+        const canvasContainer = document.getElementById("canvasContainer");
+        const notification = document.getElementById("notification");
+        const gameOverOverlay = document.getElementById("gameOverOverlay");
+        const finalScoreElement = document.getElementById("finalScore");
+
+        const grid = 20;
+        let count = 0;
+        let score = 0;
+        let speedLimit = 5; // Lower is faster. Runs at 60fps / limit.
+        let isGameOver = false;
+        let isGameStarted = false; // Başlangıçta beklemede
+
+        let snake = {
+            x: 160,
+            y: 160,
+            dx: grid,
+            dy: 0,
+            cells: [],
+            maxCells: 4
+        };
+
+        let food = {
+            x: 320,
+            y: 320
+        };
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const emojis = ['🐍', '❤️', '💜', '✨', '💕', '💫'];
+            for (let i = 0; i < 15; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.animationDuration = (5 + Math.random() * 5) + 's';
+                p.style.animationDelay = (Math.random() * 5) + 's';
+                p.style.fontSize = (16 + Math.random() * 10) + 'px';
+                container.appendChild(p);
+            }
+        }
+
+        function updateLevelText() {
+            if (score <= 10) {
+                levelTextElement.textContent = "Henüz yolun başındayız...";
+            } else if (score > 10 && score < 50) {
+                levelTextElement.textContent = "Kalbim seninle atıyor!";
+            } else {
+                levelTextElement.textContent = "Aşkımızın hızı durdurulamaz!";
+            }
+        }
+
+        function triggerGlowEffect() {
+            canvasContainer.classList.add("glow");
+            setTimeout(() => {
+                canvasContainer.classList.remove("glow");
+            }, 300);
+        }
+
+        function triggerSpeedUpNotification() {
+            notification.classList.remove("show");
+            void notification.offsetWidth; // trigger reflow
+            notification.classList.add("show");
+        }
+
+        function gameOver() {
+            isGameOver = true;
+            finalScoreElement.textContent = score;
+            gameOverOverlay.classList.add("show");
+        }
+
+        function drawStartScreen() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Yemi çiz
+            ctx.font = "18px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("❤️", food.x + grid / 2, food.y + grid / 2 + 2);
+
+            // Başlangıç yılanını çiz (tek hücre)
+            ctx.fillStyle = '#4c1d95';
+            ctx.beginPath();
+            ctx.roundRect(snake.x + 1, snake.y + 1, grid - 2, grid - 2, 4);
+            ctx.fill();
+
+            // Yarı-saydam koyu katman
+            ctx.fillStyle = 'rgba(13, 13, 26, 0.6)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Mesaj
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.font = "bold 20px Outfit, Arial";
+            ctx.fillStyle = '#f472b6';
+            ctx.fillText('🐾 Başlamak için tuşa bas!', canvas.width / 2, canvas.height / 2 - 16);
+            ctx.font = "14px Outfit, Arial";
+            ctx.fillStyle = 'rgba(167, 139, 250, 0.85)';
+            ctx.fillText('⬅️ ⬆️ ⬇️ ➡️ veya WASD', canvas.width / 2, canvas.height / 2 + 18);
+        }
+
+        function resetGame() {
+            snake.x = 160;
+            snake.y = 160;
+            snake.cells = [];
+            snake.maxCells = 4;
+            snake.dx = grid;
+            snake.dy = 0;
+
+            score = 0;
+            speedLimit = 12;
+            scoreElement.textContent = score;
+            updateLevelText();
+
+            food.x = getRandomInt(0, 20) * grid;
+            food.y = getRandomInt(0, 20) * grid;
+
+            isGameOver = false;
+            isGameStarted = false; // Tekrar bekleme ekranına dön
+            gameOverOverlay.classList.remove("show");
+
+            drawStartScreen();
+            requestAnimationFrame(loop);
+        }
+
+        function loop() {
+            if (isGameOver) return;
+            requestAnimationFrame(loop);
+
+            // Oyun başlamadıysa bekle
+            if (!isGameStarted) return;
+
+            if (++count < speedLimit) {
+                return;
+            }
+
+            count = 0;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            snake.x += snake.dx;
+            snake.y += snake.dy;
+
+            // Duvara çarpma kontrolü (Ölüm)
+            if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
+                gameOver();
+                return;
+            }
+
+            snake.cells.unshift({ x: snake.x, y: snake.y });
+
+            if (snake.cells.length > snake.maxCells) {
+                snake.cells.pop();
+            }
+
+            // Yem çizimi (Kalp emoji)
+            ctx.font = "18px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("❤️", food.x + grid / 2, food.y + grid / 2 + 2); // Ortalamak için hafif ayar
+
+            // Yılan çizimi
+            snake.cells.forEach(function (cell, index) {
+                // Gradient for head vs body
+                if (index === 0) {
+                    ctx.fillStyle = '#4c1d95'; // Head: Dark Purple
+                } else {
+                    ctx.fillStyle = '#a78bfa'; // Body: Lilac
+                }
+
+                // Draw cell with a slight padding so they don't look totally glued
+                ctx.beginPath();
+                ctx.roundRect(cell.x + 1, cell.y + 1, grid - 2, grid - 2, 4);
+                ctx.fill();
+
+                // Yılan yem yedi mi?
+                if (cell.x === food.x && cell.y === food.y) {
+                    snake.maxCells++;
+                    score++;
+                    scoreElement.textContent = score;
+                    updateLevelText();
+                    triggerGlowEffect();
+
+                    // Hızlandırma mekaniği
+                    if (score > 0 && score % 5 === 0) {
+                        triggerSpeedUpNotification();
+                        if (speedLimit > 4) {
+                            speedLimit -= 1; // Hızlandır
+                        }
+                    }
+
+                    food.x = getRandomInt(0, 20) * grid;
+                    food.y = getRandomInt(0, 20) * grid;
+                }
+
+                // Kendine çarpma kontrolü (Ölüm)
+                for (let i = index + 1; i < snake.cells.length; i++) {
+                    if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+                        gameOver();
+                        return;
+                    }
+                }
+            });
+        }
+
+        // Klavye Kontrolleri (Yön tuşları + WASD)
+        document.addEventListener('keydown', function (e) {
+            // Yön tuşlarının sayfayı kaydırmasını engelle
+            if ([37, 38, 39, 40].includes(e.which)) e.preventDefault();
+
+            const isLeft  = e.which === 37 || e.code === 'KeyA';
+            const isUp    = e.which === 38 || e.code === 'KeyW';
+            const isRight = e.which === 39 || e.code === 'KeyD';
+            const isDown  = e.which === 40 || e.code === 'KeyS';
+
+            if (!isLeft && !isUp && !isRight && !isDown) return;
+
+            // İlk tuş = oyunu başlat
+            if (!isGameStarted) {
+                isGameStarted = true;
+            }
+
+            if (isLeft  && snake.dx === 0) { snake.dx = -grid; snake.dy = 0; }
+            else if (isUp    && snake.dy === 0) { snake.dy = -grid; snake.dx = 0; }
+            else if (isRight && snake.dx === 0) { snake.dx =  grid; snake.dy = 0; }
+            else if (isDown  && snake.dy === 0) { snake.dy =  grid; snake.dx = 0; }
+        });
+
+        createParticles();
+        drawStartScreen();      // Başlangıç ekranını göster
+        requestAnimationFrame(loop);
+    </script>
+</body>
+
+</html>

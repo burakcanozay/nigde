@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oyunlar | 🎮</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0d0d1a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            overflow-x: hidden;
+        }
+
+        /* ─── Arka plan parçacıkları ─── */
+        .particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .particle {
+            position: absolute;
+            font-size: 18px;
+            animation: floatUp linear infinite;
+            opacity: 0;
+        }
+        @keyframes floatUp {
+            0%   { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            10%  { opacity: 0.6; }
+            90%  { opacity: 0.3; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* ─── İçerik ─── */
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #c084fc, #f472b6, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #9ca3af;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(192, 132, 252, 0.2);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(192, 132, 252, 0.6);
+            box-shadow: 0 10px 40px rgba(168, 85, 247, 0.2);
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .game-title {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .game-desc {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.06);
+            color: #d1d5db;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.12);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Oyunlar 🎮</h1>
+            <p>Beraber eğlenebileceğimiz ufak sürprizler...</p>
+        </div>
+
+        <div class="games-grid">
+            <a href="hafiza-oyunu.html" class="game-card">
+                <div class="game-icon">🎴</div>
+                <div class="game-title">Hafıza Oyunu</div>
+                <div class="game-desc">Güzel anılarımızı eşleştirerek hafızanı test et! 💜</div>
+            </a>
+            
+            <a href="ask-testi.html" class="game-card">
+                <div class="game-icon">💝</div>
+                <div class="game-title">Aşk Testi</div>
+                <div class="game-desc">Beni ne kadar iyi tanıyorsun? Soruları cevapla, puanları topla! ✨</div>
+            </a>
+            
+            <a href="ask-yilani.html" class="game-card">
+                <div class="game-icon">🐍</div>
+                <div class="game-title">Aşk Yılanı</div>
+                <div class="game-desc">Kalpleri topla, sevgimizi büyüt! 🐍❤️</div>
+            </a>
+            
+            <a href="ask-kanatlari.html" class="game-card">
+                <div class="game-icon">🕊️</div>
+                <div class="game-title">Aşk Kanatları</div>
+                <div class="game-desc">Engelleri aş, birlikte geçen günleri artır! 💜</div>
+            </a>
+            
+            <a href="askin-parcalari.html" class="game-card">
+                <div class="game-icon">🧩</div>
+                <div class="game-title">Aşkın Parçaları</div>
+                <div class="game-desc">Tetris parçalarını birleştir, mutluluğu inşa et! 💜🧩</div>
+            </a>
+        </div>
+
+        <a href="index.html" class="btn-secondary">🏠 Ana Sayfaya Dön</a>
+    </div>
+
+    <script>
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const emojis = ['💜', '✨', '💕', '🌸', '⭐', '💫', '🎮', '🎲'];
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.animationDuration = (6 + Math.random() * 8) + 's';
+                p.style.animationDelay = (Math.random() * 8) + 's';
+                p.style.fontSize = (14 + Math.random() * 14) + 'px';
+                container.appendChild(p);
+            }
+        }
+        createParticles();
+    </script>
+</body>
+</html>

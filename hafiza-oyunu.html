@@ -1,0 +1,670 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hafıza Oyunu | ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0d0d1a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 30px 20px 60px;
+            overflow-x: hidden;
+        }
+
+        /* ─── Arka plan parçacıkları ─── */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            font-size: 18px;
+            animation: floatUp linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.6;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* ─── Başlık ─── */
+        .header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #c084fc, #f472b6, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .header p {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            margin-top: 6px;
+        }
+
+        /* ─── Skor paneli ─── */
+        .scoreboard {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 16px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .score-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(192, 132, 252, 0.2);
+            border-radius: 16px;
+            padding: 12px 28px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: border-color 0.3s;
+        }
+
+        .score-box:hover {
+            border-color: rgba(192, 132, 252, 0.5);
+        }
+
+        .score-label {
+            font-size: 0.7rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #c084fc;
+            line-height: 1.1;
+        }
+
+        /* ─── Butonlar ─── */
+        .controls {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #d1d5db;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+        }
+
+        /* ─── Kart ızgarası ─── */
+        .game-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            max-width: 680px;
+            width: 100%;
+        }
+
+        /* ─── Tek kart ─── */
+        .memory-card {
+            aspect-ratio: 3/4;
+            cursor: pointer;
+            perspective: 1000px;
+            border-radius: 18px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 18px;
+        }
+
+        .memory-card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* Ön yüz (kapalı) */
+        .card-front,
+        .card-back {
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            overflow: hidden;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #1e1b4b, #2d1b69, #1a1a2e);
+            border: 2px solid rgba(192, 132, 252, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .card-front::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(192, 132, 252, 0.15) 0%, transparent 70%);
+        }
+
+        .memory-card:hover:not(.flipped):not(.matched) .card-front {
+            border-color: rgba(192, 132, 252, 0.6);
+            box-shadow: 0 0 30px rgba(192, 132, 252, 0.25), inset 0 0 20px rgba(192, 132, 252, 0.05);
+        }
+
+        .card-front .front-icon {
+            font-size: 2.4rem;
+            position: relative;
+            z-index: 1;
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.12);
+            }
+        }
+
+        .card-front .front-text {
+            font-size: 0.65rem;
+            color: rgba(192, 132, 252, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Arka yüz (fotoğraf) */
+        .card-back {
+            transform: rotateY(180deg);
+            border: 2px solid transparent;
+            background: #1a1a2e;
+        }
+
+        .card-back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .memory-card.matched .card-back {
+            border-color: #a855f7;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5), 0 0 60px rgba(168, 85, 247, 0.2);
+        }
+
+        .memory-card.matched .card-back::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* ─── Kazanma ekranı ─── */
+        .win-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .win-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .win-box {
+            background: linear-gradient(135deg, #1e1b4b, #2d1b69);
+            border: 1px solid rgba(192, 132, 252, 0.4);
+            border-radius: 28px;
+            padding: 48px 56px;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(168, 85, 247, 0.4);
+            transform: scale(0.8);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 420px;
+            width: 90%;
+        }
+
+        .win-overlay.show .win-box {
+            transform: scale(1);
+        }
+
+        .win-emoji {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 16px;
+            animation: bounce 0.8s ease infinite alternate;
+        }
+
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-12px);
+            }
+        }
+
+        .win-box h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .win-box p {
+            color: #9ca3af;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .win-stats {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0 28px;
+        }
+
+        .win-stat {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 10px 20px;
+        }
+
+        .win-stat-label {
+            font-size: 0.7rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .win-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #c084fc;
+        }
+
+        /* ─── Back link ─── */
+        .back-link {
+            position: relative;
+            z-index: 1;
+            margin-top: 32px;
+            color: #6b7280;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-link:hover {
+            color: #c084fc;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 500px) {
+            .game-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Parçacıklar -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Başlık -->
+    <div class="header">
+        <h1>💜 Hafıza Oyunu</h1>
+        <p>Eşleşen fotoğrafları bul!</p>
+    </div>
+
+    <!-- Skor -->
+    <div class="scoreboard">
+        <div class="score-box">
+            <div class="score-label">Hamle</div>
+            <div class="score-value" id="moveCount">0</div>
+        </div>
+        <div class="score-box">
+            <div class="score-label">Eşleşme</div>
+            <div class="score-value" id="matchCount">0/4</div>
+        </div>
+        <div class="score-box">
+            <div class="score-label">Süre</div>
+            <div class="score-value" id="timer">00:00</div>
+        </div>
+    </div>
+
+    <!-- Butonlar -->
+    <div class="controls">
+        <button class="btn btn-primary" id="restartBtn" onclick="initGame()">🔀 Yeniden Başlat</button>
+        <a href="index.html" class="btn btn-secondary">🏠Ana Sayfa</a>
+    </div>
+
+    <!-- Kart Izgarası -->
+    <div class="game-grid" id="gameGrid"></div>
+
+    <!-- Kazanma Overlay -->
+    <div class="win-overlay" id="winOverlay">
+        <div class="win-box">
+            <span class="win-emoji">🎉</span>
+            <h2>Tebrikler Canım!</h2>
+            <p>Tüm eşleşmeleri buldun! 💜</p>
+            <div class="win-stats">
+                <div class="win-stat">
+                    <div class="win-stat-label">Toplam Hamle</div>
+                    <div class="win-stat-value" id="finalMoves">0</div>
+                </div>
+                <div class="win-stat">
+                    <div class="win-stat-label">Süre</div>
+                    <div class="win-stat-value" id="finalTime">00:00</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="initGame(); closeWin()">🔀 Tekrar Oyna</button>
+        </div>
+    </div>
+
+    <script>
+        // ─── Fotoğraflar: 4 çift = 8 kart ───
+        const PHOTOS = [
+            'foto2.jpeg',
+            'foto5.jpeg',
+            'foto8.jpeg',
+            'foto12.jpeg',
+        ];
+
+        // ─── Oyun durumu ───
+        let cards = [];
+        let flippedCards = [];
+        let matchedCount = 0;
+        let moves = 0;
+        let isLocked = false;
+        let timerInterval = null;
+        let seconds = 0;
+        let gameStarted = false;
+
+        // ─── Parçacıklar ───
+        function createParticles() {
+            const container = document.getElementById('particles');
+            container.innerHTML = '';
+            const emojis = ['💜', '✨', '💕', '🌸', '⭐', '💫'];
+            for (let i = 0; i < 18; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.animationDuration = (6 + Math.random() * 8) + 's';
+                p.style.animationDelay = (Math.random() * 8) + 's';
+                p.style.fontSize = (14 + Math.random() * 14) + 'px';
+                container.appendChild(p);
+            }
+        }
+
+        // ─── Karıştır ───
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        // ─── Timer ───
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                seconds++;
+                const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+                const s = String(seconds % 60).padStart(2, '0');
+                document.getElementById('timer').textContent = `${m}:${s}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function formatTime(s) {
+            const m = String(Math.floor(s / 60)).padStart(2, '0');
+            const sec = String(s % 60).padStart(2, '0');
+            return `${m}:${sec}`;
+        }
+
+        // ─── Oyunu Başlat ───
+        function initGame() {
+            // Durumu sıfırla
+            flippedCards = [];
+            matchedCount = 0;
+            moves = 0;
+            isLocked = false;
+            seconds = 0;
+            gameStarted = false;
+            stopTimer();
+
+            document.getElementById('moveCount').textContent = '0';
+            document.getElementById('matchCount').textContent = '0/4';
+            document.getElementById('timer').textContent = '00:00';
+
+            // Kartları oluştur: her fotoğraf 2 kez
+            const deck = shuffle([...PHOTOS, ...PHOTOS]);
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = '';
+
+            cards = deck.map((photo, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.dataset.photo = photo;
+                card.dataset.index = index;
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <div class="front-icon">💜</div>
+                            <div class="front-text">Tıkla</div>
+                        </div>
+                        <div class="card-back">
+                            <img src="${photo}" alt="Anı">
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => flipCard(card));
+                grid.appendChild(card);
+                return card;
+            });
+        }
+
+        // ─── Kart Çevirme ───
+        function flipCard(card) {
+            if (isLocked) return;
+            if (card.classList.contains('flipped')) return;
+            if (card.classList.contains('matched')) return;
+
+            // İlk hamle → timer başlasın
+            if (!gameStarted) {
+                gameStarted = true;
+                startTimer();
+            }
+
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                moves++;
+                document.getElementById('moveCount').textContent = moves;
+                checkMatch();
+            }
+        }
+
+        // ─── Eşleşme Kontrolü ───
+        function checkMatch() {
+            isLocked = true;
+            const [c1, c2] = flippedCards;
+
+            if (c1.dataset.photo === c2.dataset.photo) {
+                // Eşleşti!
+                setTimeout(() => {
+                    c1.classList.add('matched');
+                    c2.classList.add('matched');
+                    c1.classList.remove('flipped');
+                    c2.classList.remove('flipped');
+                    flippedCards = [];
+                    isLocked = false;
+                    matchedCount++;
+                    document.getElementById('matchCount').textContent = `${matchedCount}/4`;
+
+                    if (matchedCount === 4) {
+                        stopTimer();
+                        setTimeout(showWin, 600);
+                    }
+                }, 500);
+            } else {
+                // Eşleşmedi → geri kapat
+                setTimeout(() => {
+                    c1.classList.remove('flipped');
+                    c2.classList.remove('flipped');
+                    flippedCards = [];
+                    isLocked = false;
+                }, 1100);
+            }
+        }
+
+        // ─── Kazanma ───
+        function showWin() {
+            document.getElementById('finalMoves').textContent = moves;
+            document.getElementById('finalTime').textContent = formatTime(seconds);
+            document.getElementById('winOverlay').classList.add('show');
+        }
+        function closeWin() {
+            document.getElementById('winOverlay').classList.remove('show');
+        }
+
+        // ─── Başlat ───
+        createParticles();
+        initGame();
+    </script>
+</body>
+
+</html>
