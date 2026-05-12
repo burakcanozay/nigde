@@ -538,17 +538,16 @@ function initScratchCard() {
     }
 
     window.addEventListener('resize', resizeCanvas);
-
-    // Boyutların doğru alınması için hafif bir gecikme ile başlat
-    setTimeout(resizeCanvas, 100);
+    setTimeout(resizeCanvas, 300);
 
     function getXY(e) {
         const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : (e.changedTouches ? e.changedTouches[0].clientX : e.clientX);
+        const clientY = (e.touches && e.touches[0]) ? e.touches[0].clientY : (e.changedTouches ? e.changedTouches[0].clientY : e.clientY);
 
-        // Sayfada zoom değerini dinamik olarak alıyoruz (Masaüstünde 0.8, Mobilde 1.0)
-        const zoom = parseFloat(getComputedStyle(document.body).getPropertyValue('zoom')) || 1;
+        // Masaüstünde zoom: 0.8, Mobilde: 1.0
+        const zoom = (window.innerWidth > 768) ? 0.8 : 1.0;
+
         return {
             x: (clientX - rect.left) / zoom,
             y: (clientY - rect.top) / zoom
@@ -562,13 +561,35 @@ function initScratchCard() {
         ctx.fill();
     }
 
-    canvas.addEventListener("mousedown", (e) => { isDrawing = true; const p = getXY(e); scratch(p.x, p.y); });
-    canvas.addEventListener("mousemove", (e) => { if (isDrawing) { const p = getXY(e); scratch(p.x, p.y); } });
-    window.addEventListener("mouseup", () => { if (isDrawing) { isDrawing = false; checkReveal(); } });
+    function handleStart(e) {
+        isDrawing = true;
+        const p = getXY(e);
+        scratch(p.x, p.y);
+        if (e.type === "touchstart") e.preventDefault();
+    }
 
-    canvas.addEventListener("touchstart", (e) => { isDrawing = true; const p = getXY(e); scratch(p.x, p.y); e.preventDefault(); }, { passive: false });
-    canvas.addEventListener("touchmove", (e) => { if (isDrawing) { const p = getXY(e); scratch(p.x, p.y); e.preventDefault(); } }, { passive: false });
-    window.addEventListener("touchend", () => { if (isDrawing) { isDrawing = false; checkReveal(); } });
+    function handleMove(e) {
+        if (!isDrawing) return;
+        const p = getXY(e);
+        scratch(p.x, p.y);
+        if (e.type === "touchmove") e.preventDefault();
+    }
+
+    function handleEnd() {
+        if (isDrawing) {
+            isDrawing = false;
+            checkReveal();
+        }
+    }
+
+    canvas.addEventListener("mousedown", handleStart);
+    canvas.addEventListener("mousemove", handleMove);
+    window.addEventListener("mouseup", handleEnd);
+
+    canvas.addEventListener("touchstart", handleStart, { passive: false });
+    canvas.addEventListener("touchmove", handleMove, { passive: false });
+    window.addEventListener("touchend", handleEnd);
+    window.addEventListener("touchcancel", handleEnd);
 
     function checkReveal() {
         if (isRevealed) return;
