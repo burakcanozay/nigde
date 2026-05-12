@@ -33,18 +33,7 @@
             <h2 id="timeGreeting" class="time-greeting">...</h2>
         </div>
 
-        <!-- Modal Kutusu -->
-        <div id="imageModal" class="modal">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <button class="nav-btn prev-btn" onclick="prevImage()">&#10094;</button>
-            <button class="nav-btn next-btn" onclick="nextImage()">&#10095;</button>
-            <div class="modal-content">
-                <img id="modalImage" src="" alt="Büyütülmüş Fotoğraf">
-                <textarea id="modalText"
-                    placeholder="Bu fotoğrafla ilgili bir anı veya not yaz... (Yazdıkların otomatik kaydedilir)"
-                    oninput="saveText()"></textarea>
-            </div>
-        </div>
+        <!-- ===== ZAMAN DUYARLI KARŞILAMA MODÜLÜ ===== -->
 
 
 
@@ -329,12 +318,13 @@
                 <small>Yazdığın not otomatik kaydedilir.</small>
             </div>
             <img id="modalImage" src="" alt="Büyütülmüş Fotoğraf">
-            <p
-                style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-top: 15px; margin-bottom: -10px; font-style: italic;">
-                "Bu anı seninle güzel..."</p>
-            <textarea id="modalText"
-                placeholder="Bu fotoğrafla ilgili bir anı veya not yaz... (Yazdıkların otomatik kaydedilir)"
-                oninput="saveText()"></textarea>
+            <div class="modal-note-area">
+                <h3 class="modal-note-title">Bu anı seninle güzel... 💜</h3>
+                <p class="modal-note-description">Bu fotoğrafla ilgili hislerini buraya yazabilirsin.</p>
+                <textarea id="modalText"
+                    placeholder="Bu fotoğrafla ilgili bir anı veya not yaz... (Yazdıkların otomatik kaydedilir)"
+                    oninput="saveText()"></textarea>
+            </div>
         </div>
     </div>
 

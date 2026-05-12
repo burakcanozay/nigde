@@ -193,6 +193,344 @@ body {
     /* Tarayıcıdaki %80 görünümü varsayılan yapar */
 }
 
+/* Masaüstü için varsayılan zoom ayarı korunuyor ama mobil için aşağıda ezilecek */
+
+/* ===================================================
+   MOBİL UYUMLULUK (RESPONSIVE) DÜZENLEMELERİ
+=================================================== */
+
+@media (max-width: 768px) {
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        zoom: 1 !important;
+        /* Mobilde zoom kapatıldı */
+        width: 100%;
+        min-height: 100vh;
+        padding: 18px 10px 120px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .card {
+        width: min(100%, 94vw);
+        max-width: 94vw !important;
+        padding: 18px 14px;
+        margin: 12px auto;
+        border-radius: 22px;
+    }
+
+    /* Başlık ve Sayaçlar */
+    .heart-icon {
+        font-size: 3.8rem;
+        margin: 16px auto;
+    }
+
+    .card h1 {
+        font-size: clamp(1.45rem, 7vw, 2rem);
+        line-height: 1.15;
+    }
+
+    #counter {
+        font-size: 0.95rem;
+    }
+
+    .time-greeting-container {
+        padding: 14px 12px;
+        margin-bottom: 16px;
+    }
+
+    .time-greeting {
+        font-size: clamp(1rem, 5vw, 1.35rem);
+        white-space: normal;
+        text-align: center;
+        margin: 0;
+        left: 0;
+        /* Ortalamayı bozmasın */
+    }
+
+    /* Fotoğraf Galerisi */
+    .gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        padding: 14px 6px;
+        max-height: none;
+        overflow-y: visible;
+        overflow-x: hidden;
+    }
+
+    .gallery img {
+        width: 100%;
+        height: 160px;
+        border-radius: 14px;
+        transform: none !important;
+    }
+
+    .gallery img:hover {
+        transform: none !important;
+    }
+
+    .gallery img:active {
+        transform: scale(0.98) !important;
+    }
+
+    .favorite-photo-wrapper,
+    .gallery .favorite-photo-wrapper:nth-child(n) {
+        transform: none !important;
+    }
+
+    .favorite-photo-wrapper img {
+        height: 160px;
+    }
+
+    .favorite-photo-btn {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        min-height: 42px;
+        top: 8px;
+        right: 8px;
+        font-size: 1.15rem;
+    }
+
+    /* Fotoğraf Modalı */
+    .modal {
+        padding: 12px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        width: 94vw;
+        max-width: 94vw;
+        max-height: 86vh;
+        padding: 16px;
+        border-radius: 24px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        grid-template-columns: 1fr !important;
+        /* Grid yapısını tek sütuna düşür */
+    }
+
+    #modalImage {
+        max-width: 100%;
+        max-height: 48vh;
+        border-radius: 18px;
+    }
+
+    #modalText {
+        width: 100%;
+        min-width: 0;
+        height: 115px;
+        min-height: 115px;
+        margin-top: 14px;
+        font-size: 0.95rem;
+        border-radius: 18px;
+    }
+
+    .close-btn {
+        top: 12px;
+        right: 12px;
+        width: 44px;
+        height: 44px;
+        font-size: 30px;
+        z-index: 120;
+    }
+
+    .nav-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.35rem;
+        z-index: 115;
+    }
+
+    .prev-btn {
+        left: 8px;
+    }
+
+    .next-btn {
+        right: 8px;
+    }
+
+    /* Butonlar */
+    button,
+    .primary-btn,
+    .secondary-btn,
+    .nav-btn,
+    .mood-btn,
+    .love-wheel-spin,
+    .toggle-favorites-btn,
+    .love-letter-btn,
+    .splash-btn {
+        min-height: 44px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .action-buttons {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .action-buttons button {
+        min-width: 120px;
+    }
+
+    /* Sayaçlar */
+    .countdown-grid,
+    .birthday-countdown-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .countdown-item,
+    .bday-val,
+    .bday-lbl {
+        min-width: 0;
+        padding: 12px 8px;
+    }
+
+    .bday-sep {
+        display: none;
+        /* Mobilde ayırıcılar grid yapısında kafa karıştırabilir */
+    }
+
+    .birthday-container,
+    .anniversary-container,
+    .surprize-counter-card {
+        width: 100%;
+        padding: 18px 12px;
+        border-radius: 22px;
+    }
+
+    /* Ruh Hali Bölümü */
+    #moodMessageSection {
+        width: 100%;
+        padding: 22px 14px;
+        border-radius: 24px;
+        margin-top: 24px;
+    }
+
+    .mood-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .mood-btn {
+        width: 100%;
+        justify-content: center;
+        white-space: normal;
+        line-height: 1.25;
+        padding: 12px 8px;
+    }
+
+    #moodResultCard {
+        width: 100%;
+    }
+
+    /* Aşk Çarkı */
+    .love-wheel-section {
+        width: 100%;
+        padding: 8px 0;
+    }
+
+    .love-wheel-card {
+        padding: 26px 14px;
+        border-radius: 24px;
+    }
+
+    .love-wheel-wrap {
+        width: min(230px, 72vw);
+        height: min(230px, 72vw);
+    }
+
+    .love-wheel span {
+        font-size: 1.6rem;
+    }
+
+    /* Kazı Kazan */
+    .scratch-card-container {
+        width: 100%;
+        padding: 16px 10px;
+    }
+
+    .scratch-wrapper {
+        width: min(300px, 82vw);
+        height: min(225px, 62vw);
+        /* Aspect ratio korunmalı */
+    }
+
+    .scratch-message {
+        font-size: 0.9rem;
+        padding: 0 8px;
+    }
+
+    /* Spotify */
+    .spotify-player-container {
+        position: relative;
+        /* Sabitlikten çıkarıp akışa alalım */
+        width: 100%;
+        max-width: 100%;
+        margin: 24px auto 0;
+        padding: 10px;
+        opacity: 1;
+        right: auto;
+        bottom: auto;
+        animation: none;
+    }
+
+    .spotify-player-container:hover {
+        transform: none;
+    }
+
+    .spotify-player-container iframe {
+        height: 120px;
+    }
+}
+
+@media (max-width: 420px) {
+    .gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery img,
+    .favorite-photo-wrapper img {
+        height: 220px;
+    }
+
+    .mood-buttons {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Hover İyileştirmesi */
+@media (hover: none) and (pointer: coarse) {
+
+    .gallery img:hover,
+    .favorite-photo-wrapper:hover,
+    .info-card:hover,
+    button:hover,
+    .primary-btn:hover {
+        transform: none !important;
+    }
+
+    .gallery img:active,
+    button:active {
+        transform: scale(0.96) !important;
+    }
+}
+
 /* Koyu mor arka plan katmanı — Premium Gece/Aşk Evreni Görünümü */
 body::before {
     content: '';
@@ -577,86 +915,99 @@ button:hover,
     /* Daha da koyu mor */
 }
 
-.gallery img {
+.gallery .favorite-photo-wrapper {
+    width: 100%;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    display: block;
+    border-radius: 14px;
+    overflow: visible;
+}
+
+.gallery .favorite-photo-wrapper img {
     width: 100%;
     height: 190px;
     object-fit: cover;
     border-radius: 14px;
-    /* Yumuşak pembe kenarlığı */
     border: 2px solid var(--img-border);
     box-shadow: 0 10px 25px var(--img-shadow), 0 2px 10px var(--img-shadow-light);
     filter: sepia(0.05) brightness(1.02) contrast(1.02);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform-origin: center;
+    transition: all 0.4s ease;
+    display: block;
 }
 
-/* Masaya atılmış fotoğraf havası - her birine farklı açı */
-.gallery img:nth-child(1) {
+/* Masaya atılmış fotoğraf havası - her birine farklı açı (Wrapper'a uygulandı) */
+.gallery .favorite-photo-wrapper:nth-child(1) {
     transform: rotate(-3deg);
 }
 
-.gallery img:nth-child(2) {
+.gallery .favorite-photo-wrapper:nth-child(2) {
     transform: rotate(2deg);
 }
 
-.gallery img:nth-child(3) {
+.gallery .favorite-photo-wrapper:nth-child(3) {
     transform: rotate(-2.5deg);
 }
 
-.gallery img:nth-child(4) {
+.gallery .favorite-photo-wrapper:nth-child(4) {
     transform: rotate(3deg);
 }
 
-.gallery img:nth-child(5) {
+.gallery .favorite-photo-wrapper:nth-child(5) {
     transform: rotate(-1.5deg);
 }
 
-.gallery img:nth-child(6) {
+.gallery .favorite-photo-wrapper:nth-child(6) {
     transform: rotate(2.5deg);
 }
 
-.gallery img:nth-child(7) {
+.gallery .favorite-photo-wrapper:nth-child(7) {
     transform: rotate(-3.5deg);
 }
 
-.gallery img:nth-child(8) {
+.gallery .favorite-photo-wrapper:nth-child(8) {
     transform: rotate(1.5deg);
 }
 
-.gallery img:nth-child(9) {
+.gallery .favorite-photo-wrapper:nth-child(9) {
     transform: rotate(-2deg);
 }
 
-.gallery img:nth-child(10) {
+.gallery .favorite-photo-wrapper:nth-child(10) {
     transform: rotate(2.8deg);
 }
 
-.gallery img:nth-child(11) {
+.gallery .favorite-photo-wrapper:nth-child(11) {
     transform: rotate(-3.2deg);
 }
 
-.gallery img:nth-child(12) {
+.gallery .favorite-photo-wrapper:nth-child(12) {
     transform: rotate(1.2deg);
 }
 
-.gallery img:nth-child(13) {
+.gallery .favorite-photo-wrapper:nth-child(13) {
     transform: rotate(-2.8deg);
 }
 
-.gallery img:nth-child(14) {
+.gallery .favorite-photo-wrapper:nth-child(14) {
     transform: rotate(3.1deg);
 }
 
-.gallery img:nth-child(15) {
+.gallery .favorite-photo-wrapper:nth-child(15) {
     transform: rotate(-1.8deg);
 }
 
-/* Fotoğrafın üzerine gelince büyüme efekti */
-.gallery img:hover {
-    transform: scale(1.1) translateY(-8px) rotate(0deg);
-    z-index: 2;
-    border-color: rgba(236, 72, 153, 0.4);
-    box-shadow: 0 15px 40px rgba(236, 72, 153, 0.2), 0 5px 12px rgba(236, 72, 153, 0.1);
+/* Fotoğrafın üzerine gelince büyüme efekti (Wrapper üzerinden) */
+.gallery .favorite-photo-wrapper:hover {
+    transform: scale(1.08) translateY(-8px) rotate(0deg);
+    z-index: 10;
+}
+
+.gallery .favorite-photo-wrapper:hover img {
+    border-color: rgba(236, 72, 153, 0.6);
+    box-shadow:
+        0 15px 35px rgba(236, 72, 153, 0.3),
+        0 5px 12px rgba(236, 72, 153, 0.15);
 }
 
 /* Modal (Büyütülmüş Fotoğraf) Stilleri */
@@ -737,12 +1088,37 @@ button:hover,
     background: rgba(255, 255, 255, 0.08);
 }
 
-#modalText {
+.modal-note-area {
     width: min(100%, 760px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-note-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+    text-align: center;
+    text-shadow: 0 0 15px rgba(236, 72, 153, 0.4);
+    font-family: 'Outfit', sans-serif;
+}
+
+.modal-note-description {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.72);
+    margin-bottom: 14px;
+    text-align: center;
+    line-height: 1.4;
+}
+
+#modalText {
+    width: 100%;
     min-width: 0;
     min-height: 120px;
     height: 120px;
-    margin-top: 18px;
+    margin-top: 10px;
     padding: 18px 20px;
     border-radius: 22px;
     border: 1px solid rgba(255, 255, 255, 0.28);
@@ -863,6 +1239,7 @@ button:hover,
         opacity: 0;
         backdrop-filter: blur(0px);
     }
+
     to {
         opacity: 1;
         backdrop-filter: blur(20px) saturate(160%);
@@ -874,6 +1251,7 @@ button:hover,
         opacity: 0;
         transform: translateY(18px) scale(0.96);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -930,8 +1308,13 @@ body.dark-mode #modalText::placeholder {
         max-height: 72vh;
     }
 
-    #modalText {
+    .modal-note-area {
         height: min(55vh, 420px);
+        align-items: flex-start;
+    }
+
+    #modalText {
+        height: 100%;
         margin-top: 0;
     }
 }
@@ -2379,31 +2762,55 @@ body.dark-mode .favorite-counter-badge {
     background: #ec4899;
 }
 
-/* Kalp Butonu - Bağımsız Konumlandırma */
+/* Kalp Butonu - Fotoğrafın Sağ Üst Köşesine Yapışık */
 .favorite-photo-btn {
     position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
     width: 38px;
     height: 38px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(236, 72, 153, 0.4);
-    border-radius: 50%;
+    border-radius: 999px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 1.2rem;
+    justify-content: center;
+    padding: 0;
+    font-size: 1.1rem;
+    line-height: 1;
     cursor: pointer;
-    z-index: 100;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(236, 72, 153, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 22px rgba(76, 29, 149, 0.20);
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.favorite-photo-btn:hover {
+    transform: scale(1.12);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 28px rgba(236, 72, 153, 0.28);
+}
+
+.favorite-photo-btn.favorite-photo-active {
+    background: rgba(236, 72, 153, 0.92);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.55);
+    box-shadow:
+        0 10px 30px rgba(236, 72, 153, 0.36),
+        0 0 18px rgba(236, 72, 153, 0.30);
 }
 
 body.dark-mode .favorite-photo-btn {
-    background: rgba(30, 10, 45, 0.8);
+    background: rgba(30, 10, 45, 0.72);
+    border-color: rgba(236, 72, 153, 0.45);
 }
 
-.favorite-photo-btn.active {
-    color: #e11d48;
-    border-color: #ec4899;
+body.dark-mode .favorite-photo-btn:hover {
+    background: rgba(30, 10, 45, 0.92);
 }
 
 /* Favori parıltı efekti */
@@ -2627,7 +3034,7 @@ body.dark-mode .mood-result-text {
     z-index: 0;
 }
 
-.love-wheel-card > * {
+.love-wheel-card>* {
     position: relative;
     z-index: 1;
 }
@@ -2654,7 +3061,7 @@ body.dark-mode .mood-result-text {
     text-shadow: 0 0 18px rgba(236, 72, 153, 0.22);
 }
 
-.love-wheel-card > p {
+.love-wheel-card>p {
     font-size: 0.95rem;
     color: var(--text-color, #2d1b69);
     opacity: 0.82;
@@ -2676,18 +3083,17 @@ body.dark-mode .mood-result-text {
     border-radius: 50%;
     display: grid;
     place-items: center;
-    position: relative;          /* pseudo-element zeminleri için */
-    background: conic-gradient(
-        from 0deg,
-        rgba(236, 72, 153, 0.62)   0deg  45deg,
-        rgba(167, 139, 250, 0.62) 45deg  90deg,
-        rgba(124, 58, 237, 0.62)  90deg 135deg,
-        rgba(236, 72, 153, 0.62) 135deg 180deg,
-        rgba(167, 139, 250, 0.62) 180deg 225deg,
-        rgba(124, 58, 237, 0.62) 225deg 270deg,
-        rgba(236, 72, 153, 0.62) 270deg 315deg,
-        rgba(167, 139, 250, 0.62) 315deg 360deg
-    );
+    position: relative;
+    /* pseudo-element zeminleri için */
+    background: conic-gradient(from 0deg,
+            rgba(236, 72, 153, 0.62) 0deg 45deg,
+            rgba(167, 139, 250, 0.62) 45deg 90deg,
+            rgba(124, 58, 237, 0.62) 90deg 135deg,
+            rgba(236, 72, 153, 0.62) 135deg 180deg,
+            rgba(167, 139, 250, 0.62) 180deg 225deg,
+            rgba(124, 58, 237, 0.62) 225deg 270deg,
+            rgba(236, 72, 153, 0.62) 270deg 315deg,
+            rgba(167, 139, 250, 0.62) 315deg 360deg);
     border: 6px solid rgba(255, 255, 255, 0.50);
     box-shadow:
         0 20px 55px rgba(76, 29, 149, 0.38),
@@ -2705,10 +3111,8 @@ body.dark-mode .mood-result-text {
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: repeating-conic-gradient(
-        rgba(255, 255, 255, 0.28) 0deg 1.5deg,
-        transparent              1.5deg 45deg
-    );
+    background: repeating-conic-gradient(rgba(255, 255, 255, 0.28) 0deg 1.5deg,
+            transparent 1.5deg 45deg);
     pointer-events: none;
     z-index: 1;
 }
@@ -2719,12 +3123,10 @@ body.dark-mode .mood-result-text {
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: radial-gradient(
-        circle at 32% 28%,
-        rgba(255, 255, 255, 0.38) 0%,
-        rgba(255, 255, 255, 0.10) 38%,
-        transparent 68%
-    );
+    background: radial-gradient(circle at 32% 28%,
+            rgba(255, 255, 255, 0.38) 0%,
+            rgba(255, 255, 255, 0.10) 38%,
+            transparent 68%);
     pointer-events: none;
     z-index: 2;
 }
@@ -2734,19 +3136,43 @@ body.dark-mode .mood-result-text {
     position: absolute;
     font-size: 1.9rem;
     line-height: 1;
-    z-index: 3;          /* pseudo-elementlerin üstünde */
-    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.30));
+    z-index: 3;
+    /* pseudo-elementlerin üstünde */
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.30));
 }
 
 /* 8 segment × 45° = 360°  |  merkez = i×45 + 22.5 */
-.love-wheel span:nth-child(1) { transform: rotate(22.5deg)  translateY(-82px); }
-.love-wheel span:nth-child(2) { transform: rotate(67.5deg)  translateY(-82px); }
-.love-wheel span:nth-child(3) { transform: rotate(112.5deg) translateY(-82px); }
-.love-wheel span:nth-child(4) { transform: rotate(157.5deg) translateY(-82px); }
-.love-wheel span:nth-child(5) { transform: rotate(202.5deg) translateY(-82px); }
-.love-wheel span:nth-child(6) { transform: rotate(247.5deg) translateY(-82px); }
-.love-wheel span:nth-child(7) { transform: rotate(292.5deg) translateY(-82px); }
-.love-wheel span:nth-child(8) { transform: rotate(337.5deg) translateY(-82px); }
+.love-wheel span:nth-child(1) {
+    transform: rotate(22.5deg) translateY(-82px);
+}
+
+.love-wheel span:nth-child(2) {
+    transform: rotate(67.5deg) translateY(-82px);
+}
+
+.love-wheel span:nth-child(3) {
+    transform: rotate(112.5deg) translateY(-82px);
+}
+
+.love-wheel span:nth-child(4) {
+    transform: rotate(157.5deg) translateY(-82px);
+}
+
+.love-wheel span:nth-child(5) {
+    transform: rotate(202.5deg) translateY(-82px);
+}
+
+.love-wheel span:nth-child(6) {
+    transform: rotate(247.5deg) translateY(-82px);
+}
+
+.love-wheel span:nth-child(7) {
+    transform: rotate(292.5deg) translateY(-82px);
+}
+
+.love-wheel span:nth-child(8) {
+    transform: rotate(337.5deg) translateY(-82px);
+}
 
 /* Üstteki işaretçi (pointer) */
 .love-wheel-pointer {
@@ -2762,13 +3188,20 @@ body.dark-mode .mood-result-text {
 }
 
 @keyframes lovePointerBounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50%       { transform: translateX(-50%) translateY(-5px); }
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(-5px);
+    }
 }
 
 /* Dönerken pointer animasyonu dursun */
-.love-wheel-spinning ~ .love-wheel-pointer,
-.love-wheel.spinning ~ .love-wheel-pointer {
+.love-wheel-spinning~.love-wheel-pointer,
+.love-wheel.spinning~.love-wheel-pointer {
     animation-play-state: paused;
 }
 
@@ -2840,6 +3273,7 @@ body.dark-mode .mood-result-text {
         opacity: 0;
         transform: translateY(14px) scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -2857,7 +3291,7 @@ body.dark-mode .love-wheel-card h2 {
     color: #e6e6fa;
 }
 
-body.dark-mode .love-wheel-card > p {
+body.dark-mode .love-wheel-card>p {
     color: #d8b4fe;
 }
 
@@ -2961,6 +3395,7 @@ body.dark-mode .love-wheel-result p {
         opacity: 0;
         transform: translateY(20px) scale(0.93);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -2974,6 +3409,7 @@ body.dark-mode .love-wheel-result p {
             0 0 25px rgba(236, 72, 153, 0.12),
             inset 0 1px 0 rgba(255, 255, 255, 0.28);
     }
+
     to {
         box-shadow:
             0 28px 90px rgba(124, 58, 237, 0.28),
@@ -2983,8 +3419,15 @@ body.dark-mode .love-wheel-result p {
 }
 
 @keyframes birthdayCakeBounce {
-    0%, 100% { transform: translateY(0) rotate(-4deg); }
-    50%       { transform: translateY(-9px) rotate(4deg); }
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(-4deg);
+    }
+
+    50% {
+        transform: translateY(-9px) rotate(4deg);
+    }
 }
 
 /* Konfeti katmanı */

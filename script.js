@@ -35,7 +35,9 @@ document.addEventListener("DOMContentLoaded", function () {
         enableDarkMode();
     }
     const darkModeBtn = document.getElementById("darkModeToggle");
-    darkModeBtn.addEventListener("click", toggleDarkMode);
+    if (darkModeBtn) {
+        darkModeBtn.addEventListener("click", toggleDarkMode);
+    }
 });
 
 function toggleDarkMode() {
@@ -282,8 +284,15 @@ setInterval(createHeart, 300); // Sıklık artırıldı (400ms -> 300ms)
 
 // Evet - Hayır Butonu Etkileşimi
 const btnNo = document.getElementById("btnNo");
-btnNo.addEventListener("mouseover", function () {
+btnNo.addEventListener("mouseover", moveNoButton);
+btnNo.addEventListener("touchstart", function (e) {
+    e.preventDefault();
+    moveNoButton();
+}, { passive: false });
+
+function moveNoButton() {
     const card = document.querySelector(".card");
+    if (!card) return;
     btnNo.style.position = "absolute";
     const maxLeft = card.offsetWidth - btnNo.offsetWidth - 40;
     const maxTop = card.offsetHeight - btnNo.offsetHeight - 40;
@@ -291,7 +300,7 @@ btnNo.addEventListener("mouseover", function () {
     const randomTop = Math.floor(Math.random() * maxTop) + 20;
     btnNo.style.left = randomLeft + "px";
     btnNo.style.top = randomTop + "px";
-});
+}
 
 function loveYes() {
     for (let i = 0; i < 100; i++) { createExplosionHeart(); }
@@ -538,10 +547,11 @@ function initScratchCard() {
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-        // Sayfada zoom: 0.8 olduğu için koordinatları 0.8'e bölerek gerçek canvas konumunu buluyoruz
+        // Sayfada zoom değerini dinamik olarak alıyoruz (Masaüstünde 0.8, Mobilde 1.0)
+        const zoom = parseFloat(getComputedStyle(document.body).getPropertyValue('zoom')) || 1;
         return {
-            x: (clientX - rect.left) / 0.8,
-            y: (clientY - rect.top) / 0.8
+            x: (clientX - rect.left) / zoom,
+            y: (clientY - rect.top) / zoom
         };
     }
 
@@ -851,70 +861,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateCounter() { if (favCountEl) favCountEl.textContent = favorites.length; }
 
-    // Kalp butonlarını oluştur ve galeriye ekle (resimlerin içine değil, yanına)
+    // Kalp butonlarını oluştur ve resimlerin üstüne yerleştir (Wrapper kullanarak)
     function initHearts() {
         const imgs = gallery.querySelectorAll("img");
         imgs.forEach((img, index) => {
             const src = img.getAttribute("src");
+            
+            // Eğer resim zaten bir wrapper içindeyse (shuffle sonrası tekrar çağrılırsa diye)
+            if (img.parentElement.classList.contains("favorite-photo-wrapper")) return;
+
+            // 1. Wrapper oluştur ve resmi içine al
+            const wrapper = document.createElement("div");
+            wrapper.className = "favorite-photo-wrapper";
+            img.parentNode.insertBefore(wrapper, img);
+            wrapper.appendChild(img);
+
+            // 2. Butonu oluştur ve wrapper'a ekle
             const btn = document.createElement("button");
             btn.className = "favorite-photo-btn";
+            btn.type = "button"; // Form submit'i önlemek için
             btn.dataset.targetSrc = src;
             btn.innerHTML = favorites.includes(src) ? "❤️" : "🤍";
             if (favorites.includes(src)) {
-                btn.classList.add("active");
+                btn.classList.add("favorite-photo-active");
                 img.classList.add("favorite-glow");
             }
 
-            btn.onclick = (e) => {
-                e.stopPropagation();
+            btn.addEventListener("click", function (event) {
+                event.stopPropagation();
                 const isFav = favorites.includes(src);
                 if (isFav) {
                     favorites = favorites.filter(s => s !== src);
-                    btn.innerHTML = "🤍";
-                    btn.classList.remove("active");
+                    this.innerHTML = "🤍";
+                    this.classList.remove("favorite-photo-active");
                     img.classList.remove("favorite-glow");
                 } else {
                     favorites.push(src);
-                    btn.innerHTML = "❤️";
-                    btn.classList.add("active");
+                    this.innerHTML = "❤️";
+                    this.classList.add("favorite-photo-active");
                     img.classList.add("favorite-glow");
                     showToast();
                 }
                 localStorage.setItem("favoritePhotos", JSON.stringify(favorites));
                 updateCounter();
                 if (gallery.classList.contains("favorites-only")) filterGallery();
-            };
-            gallery.appendChild(btn);
-        });
-        updatePositions();
-    }
-
-    // Butonları resimlerin sağ üst köşesine hizala
-    function updatePositions() {
-        const btns = gallery.querySelectorAll(".favorite-photo-btn");
-        btns.forEach(btn => {
-            const targetImg = gallery.querySelector(`img[src="${btn.dataset.targetSrc}"]`);
-            if (targetImg && targetImg.style.display !== "none") {
-                btn.style.opacity = "1";
-                btn.style.pointerEvents = "auto";
-                btn.style.top = targetImg.offsetTop + 10 + "px";
-                btn.style.left = (targetImg.offsetLeft + targetImg.offsetWidth - 48) + "px";
-                // Resmin rotasyonunu butona da uygula (Senkronize hareket)
-                btn.style.transform = window.getComputedStyle(targetImg).transform;
-            } else {
-                btn.style.opacity = "0";
-                btn.style.pointerEvents = "none";
-            }
+            });
+            wrapper.appendChild(btn);
         });
     }
 
     function filterGallery() {
-        const imgs = gallery.querySelectorAll("img");
-        imgs.forEach(img => {
+        const wrappers = gallery.querySelectorAll(".favorite-photo-wrapper");
+        wrappers.forEach(wrapper => {
+            const img = wrapper.querySelector("img");
             const src = img.getAttribute("src");
-            img.style.display = gallery.classList.contains("favorites-only") && !favorites.includes(src) ? "none" : "block";
+            wrapper.style.display = (gallery.classList.contains("favorites-only") && !favorites.includes(src)) ? "none" : "block";
         });
-        updatePositions();
     }
 
     function showToast() {
@@ -935,8 +937,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Galeri karıştırıldıktan (shuffle) sonra butonları yerleştir
     setTimeout(initHearts, 100);
 
-    // Pencere boyutu değişirse veya resimler yüklenirse konumları güncelle
-    window.addEventListener("resize", updatePositions);
     updateCounter();
 });
 
