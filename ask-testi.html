@@ -29,22 +29,39 @@
         /* Arka plan parçacıkları */
         .particles {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 0;
         }
+
         .particle {
             position: absolute;
             font-size: 18px;
             animation: floatUp linear infinite;
             opacity: 0;
         }
+
         @keyframes floatUp {
-            0%   { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            10%  { opacity: 0.6; }
-            90%  { opacity: 0.3; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.6;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
         }
 
         .quiz-container {
@@ -153,21 +170,22 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 30px rgba(168, 85, 247, 0.6);
         }
-        
+
         .nav-btn.secondary {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             box-shadow: none;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .nav-btn.secondary:hover {
-            background: rgba(255,255,255,0.15);
-            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
         }
 
         .result-screen {
             display: none;
         }
-        
+
         .result-emoji {
             font-size: 5rem;
             margin-bottom: 20px;
@@ -184,9 +202,9 @@
         .btn-secondary {
             display: inline-block;
             margin-top: 15px;
-            background: rgba(255,255,255,0.06);
+            background: rgba(255, 255, 255, 0.06);
             color: #d1d5db;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 12px 30px;
             border-radius: 50px;
             font-family: 'Outfit', sans-serif;
@@ -194,15 +212,20 @@
             text-decoration: none;
             transition: all 0.25s ease;
         }
-        
+
         .btn-secondary:hover {
-            background: rgba(255,255,255,0.12);
+            background: rgba(255, 255, 255, 0.12);
             color: white;
         }
 
         @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-15px); }
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-15px);
+            }
         }
     </style>
 </head>
@@ -220,15 +243,17 @@
             </div>
 
             <div class="question-text" id="questionText">Soru yükleniyor...</div>
-            
+
             <div class="options" id="optionsContainer">
                 <!-- Butonlar buraya gelecek -->
             </div>
 
             <div class="feedback" id="feedbackMsg"></div>
-            
-            <div class="navigation-buttons" style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;">
-                <button class="nav-btn secondary" id="prevBtn" onclick="prevQuestion()" style="display: none;">⬅ Önceki</button>
+
+            <div class="navigation-buttons"
+                style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;">
+                <button class="nav-btn secondary" id="prevBtn" onclick="prevQuestion()" style="display: none;">⬅
+                    Önceki</button>
                 <button class="nav-btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Sonraki ➔</button>
             </div>
         </div>
@@ -250,144 +275,144 @@
     <script>
         const questions = [
             {
-                question: "Benim en sevdiğim renk hangisi?",
+                question: "Burak benim en sevdiğim renk hangisi?",
                 options: ["Mavi", "Mor", "Siyah", "Kırmızı"],
                 correctAnswer: 1,
                 successMsg: "Evet bebeğim! 💜",
                 errorMsg: "Aşk olsun, bunu nasıl bilemezsin? 🥺"
             },
             {
-                question: "En sevdiğim yemek nedir?",
-                options: ["Hamburger", "Pizza", "Makarna", "Lahmacun"],
+                question: "Merve burada en sevdiğim yemek nedir?",
+                options: ["Hamburger", "Pizza", "Kremalı Mantarlı Makarna", "Körili Tavuk"],
                 correctAnswer: 0,
                 successMsg: "Afiyet olsun bize o zaman! 🍔",
-                errorMsg: "Hıı demek öyle, unutulmuşuz... 😢"
+                errorMsg: "Üzülme bebeğim hepsini yerim 😢"
             },
             {
-                question: "İlk nerede tanıştık / buluştuk?",
-                options: ["Kafede", "Okulda/İşte", "İnternette", "Sinemada"],
+                question: "Burak ilk nerede tanıştık / buluştuk?",
+                options: ["Kafede", "Okulda", "Pilavcıda :D", "Sinemada"],
                 correctAnswer: 2,
-                successMsg: "O gün benim için çok özeldi... ✨",
+                successMsg: "First Date'imiz idi canım  ✨",
                 errorMsg: "Nasıl unutursun o günü! 💔"
             },
             {
-                question: "Sence ben en çok ne yapmayı severim?",
+                question: "Merve sence ben en çok ne yapmayı severim?",
                 options: ["Oyun oynamak", "Seninle vakit geçirmek", "Uyumak", "Gezmek"],
                 correctAnswer: 1,
                 successMsg: "Seninle olan her anım çok değerli 🥰",
                 errorMsg: "Yanlış! Cevap her zaman sensin... 🥺"
             },
             {
-                question: "Seni ne kadar seviyorum?",
+                question: "Burak seni ne kadar seviyorum?",
                 options: ["Çok", "Çook", "Dünyalar kadar", "Kelimelerle anlatılamayacak kadar çok"],
-                correctAnswer: 3, 
+                correctAnswer: 3,
                 successMsg: "Sonsuza dek canım sevgilim... ❤️",
                 errorMsg: "Bu sorunun yanlış cevabı yoktu ama en doğrusu buydu! 😅"
             },
             {
-                question: "En gıcık olduğum huyum / şey nedir?",
+                question: "Merve en gıcık olduğun huyun / şey nedir?",
                 options: ["Yalan söylenmesi", "Bekletilmek", "Aç kalmak", "Hepsi"],
-                correctAnswer: 3, 
+                correctAnswer: 3,
                 successMsg: "Beni çok iyi tanıyorsun! 😂",
                 errorMsg: "Biraz daha dikkatli düşünmeliydin..."
             },
             {
-                question: "Beraber izlemekten en çok keyif aldığım film türü nedir?",
+                question: "Burak beraber izlemekten en çok keyif aldığım film türü nedir?",
                 options: ["Korku", "Romantik", "Bilim Kurgu", "Komedi"],
-                correctAnswer: 1, 
+                correctAnswer: 1,
                 successMsg: "Seninle romantik filmler bir başka güzel 🍿",
                 errorMsg: "Birlikteyken korku filmi izlemeyi sevmediğimi biliyorsun! 😱"
             },
             {
-                question: "Beni en çok ne mutlu eder?",
+                question: "Merve beni en çok ne mutlu eder?",
                 options: ["Bana sürpriz yapman", "Sarılman", "Güzel sözler duymak", "Hepsi"],
-                correctAnswer: 3, 
+                correctAnswer: 3,
                 successMsg: "Senin yaptığın her şey beni çok mutlu ediyor! 🥰",
                 errorMsg: "Hepsi demeni beklerdim..."
             },
             {
-                question: "Geceleri uyumadan önce en son ne düşünürüm?",
+                question: "Burak geceleri uyumadan önce en son ne düşünürüm?",
                 options: ["Yarın ne yiyeceğimi", "Seni", "İş/Okul", "Hiçbir şey"],
-                correctAnswer: 1, 
+                correctAnswer: 1,
                 successMsg: "Hep aklımdasın... 🌙",
                 errorMsg: "Sence senden başka ne düşünebilirim ki? 🥺"
             },
             {
-                question: "Benim en sevdiğim mevsim hangisidir?",
+                question: "Merve benim en sevdiğim mevsim hangisidir?",
                 options: ["İlkbahar", "Yaz", "Sonbahar", "Kış"],
-                correctAnswer: 1, 
+                correctAnswer: 1,
                 successMsg: "Yaz mevsimi ve seninle tatil! ☀️",
                 errorMsg: "Üşümeyi sevmediğimi unuttun galiba 🥶"
             },
             {
-                question: "Hangi tatlıya asla hayır diyemem?",
-                options: ["Çikolata", "Sütlaç", "Baklava", "Dondurma"],
-                correctAnswer: 0, 
-                successMsg: "Çikolata krizlerimi iyi biliyorsun 🍫",
+                question: "Merve hangi tatlıya asla hayır diyemem?",
+                options: ["Ekmek Kadayıfı", "Ayva Tatlısı", "Baklava", "Tiramisu"],
+                correctAnswer: 0,
+                successMsg: "Bollll kaymaklı",
                 errorMsg: "Beni hiç tanımamışsın... 😭"
             },
             {
-                question: "Eğer bir süper gücüm olsaydı ne olsun isterdim?",
+                question: "Merve eğer bir süper gücün olsaydı ne olsun isterdin?",
                 options: ["Uçmak", "Zihin okumak", "Görünmez olmak", "Zamanı durdurmak"],
-                correctAnswer: 3, 
+                correctAnswer: 3,
                 successMsg: "Seninle geçirdiğim zamanı durdurmak isterdim ⏳",
                 errorMsg: "Yanlış süper güç! 🦸"
             },
             {
-                question: "Sinirlendiğimde beni en kolay ne sakinleştirir?",
+                question: "Burak sinirlendiğimde beni en kolay ne sakinleştirir?",
                 options: ["Yalnız kalmak", "Tatlı yemek", "Seninle konuşmak", "Uyumak"],
-                correctAnswer: 2, 
+                correctAnswer: 2,
                 successMsg: "Sesin bana her zaman huzur veriyor 🎶",
                 errorMsg: "Beni yalnız bırakma lütfen 🥺"
             },
             {
-                question: "İlk el ele tutuştuğumuz anı hatırlıyor musun?",
+                question: "Merve ilk el ele tutuştuğumuz anı hatırlıyor musun?",
                 options: ["Evet", "Hayır", "Emin değilim", "Unutmak mümkün mü!"],
-                correctAnswer: 3, 
+                correctAnswer: 3,
                 successMsg: "O an kalbim yerinden çıkacak gibiydi 💓",
                 errorMsg: "Böyle bir anı nasıl unutursun? 💔"
             },
             {
-                question: "Gelecekte beraber en çok nereye gitmek isterim?",
-                options: ["Paris", "Maldivler", "Kapadokya", "Senin olduğun her yer"],
-                correctAnswer: 3, 
+                question: "Burak gelecekte beraber en çok nereye gitmek isterim?",
+                options: ["Paris", "Maldivler", "İtalya", "Senin olduğun her yer"],
+                correctAnswer: 3,
                 successMsg: "Sen yoksan hiçbir yerin anlamı yok 🌍",
                 errorMsg: "Yanlış cevap! Seninle her yer güzel."
             },
             {
-                question: "Benim favori içeceğim nedir?",
+                question: "Merve benim favori içeceğim nedir?",
                 options: ["Çay", "Kahve", "Meyve Suyu", "Kola"],
-                correctAnswer: 1, 
+                correctAnswer: 1,
                 successMsg: "Kahve olmadan güne başlayamam ☕",
                 errorMsg: "Çayı da severim ama favorim değil!"
             },
             {
-                question: "Sabahları uyanınca ilk yaptığım şey nedir?",
+                question: "Burak sabahları uyanınca ilk yaptığım şey nedir?",
                 options: ["Telefona bakmak", "Su içmek", "Sana günaydın mesajı atmak", "Yüzümü yıkamak"],
-                correctAnswer: 2, 
+                correctAnswer: 2,
                 successMsg: "Güne seninle başlamak en güzeli 🌞",
                 errorMsg: "İlk işim her zaman sana yazmak olur!"
             },
             {
-                question: "Eğer hayatım bir film olsaydı adı ne olurdu?",
+                question: "Merve eğer hayatım bir film olsaydı adı ne olurdu?",
                 options: ["Aşk Tesadüfleri Sever", "Uykucu Şirin", "Oburiks", "Seninle Bir Ömür"],
-                correctAnswer: 3, 
+                correctAnswer: 3,
                 successMsg: "Seninle bir ömür boyu... 🎬",
                 errorMsg: "Aşk olsun, bana obur mu demek istedin? 😂"
             },
             {
-                question: "Benim için ilişkideki en önemli şey nedir?",
+                question: "Burak benim için ilişkideki en önemli şey nedir?",
                 options: ["Güven", "Saygı", "Sevgi", "Hepsi"],
-                correctAnswer: 3, 
+                correctAnswer: 3,
                 successMsg: "Hepsi birbiriyle bağlantılı, doğru! 🤝",
                 errorMsg: "Sadece biri yeterli değil ki..."
             },
             {
-                question: "Beni tek kelimeyle anlatsan bu ne olurdu?",
+                question: "Merve beni tek kelimeyle anlatsan bu ne olurdu?",
                 options: ["Tatlı", "Aşk", "İnatçı", "Her şeyim"],
-                correctAnswer: 3, 
+                correctAnswer: 3,
                 successMsg: "Sen de benim her şeyimsin! 💖",
-                errorMsg: "İnatçı olduğum doğru ama cevap bu değildi! 😝"
+                errorMsg: "Tatlı sevdiğim ve olduğum doğru ama cevap bu değildi! 😝"
             }
         ];
 
@@ -404,10 +429,10 @@
             const q = questions[currentQuestionIndex];
             document.getElementById('questionCount').textContent = `${currentQuestionIndex + 1}/${questions.length}`;
             document.getElementById('questionText').textContent = q.question;
-            
+
             // Butonları ayarla
             document.getElementById('prevBtn').style.display = currentQuestionIndex > 0 ? 'inline-block' : 'none';
-            
+
             const nextBtn = document.getElementById('nextBtn');
             nextBtn.style.display = 'inline-block'; // Artık cevaplamadan da ileri gidilebilir
             if (currentQuestionIndex === questions.length - 1) {
@@ -415,15 +440,15 @@
             } else {
                 nextBtn.textContent = 'Sonraki ➔';
             }
-            
+
             const optionsContainer = document.getElementById('optionsContainer');
             optionsContainer.innerHTML = '';
-            
+
             q.options.forEach((opt, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.textContent = opt;
-                
+
                 // Eğer cevaplanmışsa durumu geri yükle
                 if (userAnswers[currentQuestionIndex] !== null) {
                     btn.onclick = null;
@@ -452,7 +477,7 @@
             } else {
                 feedbackMsg.textContent = '';
             }
-            
+
             updateScoreDisplay();
         }
 
@@ -468,12 +493,12 @@
 
         function selectOption(selectedIndex, btnElement) {
             if (userAnswers[currentQuestionIndex] !== null) return; // Zaten cevaplandıysa işlem yapma
-            
+
             userAnswers[currentQuestionIndex] = selectedIndex;
-            
+
             const q = questions[currentQuestionIndex];
             const buttons = document.querySelectorAll('.option-btn');
-            
+
             if (selectedIndex === q.correctAnswer) {
                 btnElement.classList.add('correct');
                 document.getElementById('feedbackMsg').textContent = q.successMsg;
@@ -484,7 +509,7 @@
                 document.getElementById('feedbackMsg').textContent = q.errorMsg;
                 document.getElementById('feedbackMsg').style.color = '#f87171';
             }
-            
+
             updateScoreDisplay();
             document.getElementById('nextBtn').style.display = 'inline-block';
         }
@@ -508,10 +533,10 @@
         function showResults() {
             document.getElementById('quizScreen').style.display = 'none';
             document.getElementById('resultScreen').style.display = 'block';
-            
+
             const resultEmoji = document.getElementById('resultEmoji');
             const resultMsg = document.getElementById('resultMessage');
-            
+
             if (score === 100) {
                 resultEmoji.textContent = '👑';
                 resultMsg.innerHTML = `Mükemmel! Bütün soruları doğru bildin.<br><br><strong>Puanın: ${score}</strong><br><br>Beni gerçekten çok iyi tanıyorsun sevgilim! Seni çok seviyorum! ❤️`;
@@ -552,4 +577,5 @@
         initQuiz();
     </script>
 </body>
+
 </html>

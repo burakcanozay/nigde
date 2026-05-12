@@ -21,16 +21,103 @@
     <div class="night-message">Sen benim karanlıktaki ışığımsın ✨</div>
 
     <div class="card">
+        <div id="secretBadge" class="secret-badge" style="display: none;">
+            <span>Gizli mesaj bulundu 💜</span>
+            <button onclick="dismissSecretBadge(event)" style="background:none; border:none; color:inherit; cursor:pointer; margin-left:8px; font-size:16px; line-height:1; vertical-align:middle; padding:0 2px;">&times;</button>
+        </div>
+
+
         <!-- ===== ZAMAN DUYARLI KARŞILAMA MODÜLÜ ===== -->
         <div class="time-greeting-container">
-            <h2 id="timeGreeting" class="time-greeting">Günaydın gün ışığım! ☀️</h2>
+            <h2 id="timeGreeting" class="time-greeting">...</h2>
         </div>
+
+        <!-- Modal Kutusu -->
+        <div id="imageModal" class="modal">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <button class="nav-btn prev-btn" onclick="prevImage()">&#10094;</button>
+            <button class="nav-btn next-btn" onclick="nextImage()">&#10095;</button>
+            <div class="modal-content">
+                <img id="modalImage" src="" alt="Büyütülmüş Fotoğraf">
+                <textarea id="modalText"
+                    placeholder="Bu fotoğrafla ilgili bir anı veya not yaz... (Yazdıkların otomatik kaydedilir)"
+                    oninput="saveText()"></textarea>
+            </div>
+        </div>
+
+
+
+
         <!-- ===== ZAMAN DUYARLI KARŞILAMA MODÜLÜ SONU ===== -->
 
         <div class="heart-icon">❤️</div>
         <h1>İyi Ki Benimlesin</h1>
 
         <div id="counter">Hesaplanıyor...</div>
+
+        <!-- Doğum Günü Sayacı Bölümü -->
+        <div class="birthday-container surprize-counter-card">
+            <div class="birthday-title">
+                <span class="cake-icon">🎂</span> Doğum Gününe Kalan Süre
+            </div>
+            <div id="birthdayCountdown" class="countdown-grid">
+                <div class="countdown-item">
+                    <span id="days">00</span>
+                    <label>Gün</label>
+                </div>
+                <div class="countdown-item">
+                    <span id="hours">00</span>
+                    <label>Saat</label>
+                </div>
+                <div class="countdown-item">
+                    <span id="minutes">00</span>
+                    <label>Dakika</label>
+                </div>
+                <div class="countdown-item">
+                    <span id="seconds">00</span>
+                    <label>Saniye</label>
+                </div>
+            </div>
+            <div id="birthdayMessage" class="birthday-message" style="display: none;">
+                Bugün senin günün! İyi ki doğdun 💜🎂
+            </div>
+        </div>
+
+        <!-- Yıldönümü Sayacı Bölümü -->
+        <div class="anniversary-container surprize-counter-card">
+            <div class="anniversary-title">
+                <span class="star-icon">✨</span> Yıldönümümüze Kalan Süre
+            </div>
+            <div id="anniversaryCountdown" class="countdown-grid">
+                <div class="countdown-item">
+                    <span id="anni-days">00</span>
+                    <label>Gün</label>
+                </div>
+                <div class="countdown-item">
+                    <span id="anni-hours">00</span>
+                    <label>Saat</label>
+                </div>
+                <div class="countdown-item">
+                    <span id="anni-minutes">00</span>
+                    <label>Dakika</label>
+                </div>
+                <div class="countdown-item">
+                    <span id="anni-seconds">00</span>
+                    <label>Saniye</label>
+                </div>
+            </div>
+            <div id="anniversaryMessage" class="anniversary-message" style="display: none;">
+                Bugün bizim günümüz! İyi ki seninleyim 💜✨
+            </div>
+        </div>
+
+        <!-- ===== FAVORİ KONTROLLERİ ===== -->
+        <div class="favorite-controls">
+            <div id="favoritePhotoCounter" class="favorite-counter-badge">Favori Anılarım: <span id="favCount">0</span>
+            </div>
+            <button id="toggleFavoritesBtn" class="toggle-favorites-btn">Sadece Favorileri Göster</button>
+        </div>
+        <!-- ===== FAVORİ KONTROLLERİ SONU ===== -->
 
         <div class="gallery">
             <img src="foto1.jpeg" alt="Anı 1">
@@ -48,7 +135,53 @@
             <img src="foto13.jpeg" alt="Anı 13">
             <img src="foto14.jpeg" alt="Anı 14">
             <img src="foto15.jpeg" alt="Anı 15">
+            <img src="foto16.jpeg" alt="Anı 16">
+            <img src="foto17.jpeg" alt="Anı 17">
+            <img src="foto18.jpeg" alt="Anı 18">
+            <img src="foto19.jpeg" alt="Anı 19">
+            <img src="foto20.jpeg" alt="Anı 20">
+            <img src="foto21.jpeg" alt="Anı 21">
+            <img src="foto22.jpeg" alt="Anı 22">
+            <img src="foto23.jpeg" alt="Anı 23">
+            <img src="foto24.jpeg" alt="Anı 24">
+            <img src="foto25.jpeg" alt="Anı 25">
+            <img src="foto26.jpeg" alt="Anı 26">
+            <img src="foto27.jpeg" alt="Anı 27">
+            <img src="foto28.jpeg" alt="Anı 28">
+            <img src="foto29.jpeg" alt="Anı 29">
+            <img src="foto30.jpeg" alt="Anı 30">
         </div>
+
+        <!-- ===== RUH HALİNE GÖRE MESAJ BÖLÜMÜ ===== -->
+        <section id="moodMessageSection" class="card">
+            <h2>Bugün Nasıl Hissediyorsun? 💜</h2>
+            <p>Nasıl hissedersen hisset, burada sana söylemek istediğim bir şey var.</p>
+
+            <div id="moodButtons" class="mood-buttons">
+                <button class="mood-btn" data-mood="sad">Üzgünüm 🥺</button>
+                <button class="mood-btn" data-mood="miss">Seni Özledim 💭</button>
+                <button class="mood-btn" data-mood="happy">Mutluyum ✨</button>
+                <button class="mood-btn" data-mood="low">Moralim Bozuk 🌧️</button>
+                <button class="mood-btn" data-mood="hug">Sarılmak İstiyorum 🤍</button>
+                <button class="mood-btn" data-mood="jealous">Kıskandım 🙈</button>
+                <button class="mood-btn" data-mood="tired">Yoruldum 🫶</button>
+            </div>
+
+            <div id="moodResultCard" class="mood-result-card">
+                <div class="mood-result-header">
+                    <span class="tiny-heart">❤️</span>
+                    <span>Sana söylemek istediğim şey:</span>
+                </div>
+                <p id="moodResultText" class="mood-result-text"></p>
+            </div>
+        </section>
+        <!-- ===== RUH HALİNE GÖRE MESAJ BÖLÜMÜ SONU ===== -->
+
+        <!-- ===== AŞK MEKTUBU BÖLÜMÜ ===== -->
+        <div id="loveLetterSection" style="text-align: center; margin: 35px 0 15px 0;">
+            <button id="openLoveLetterBtn" class="love-letter-btn">Mektubu Aç 💌</button>
+        </div>
+        <!-- ===== AŞK MEKTUBU BÖLÜMÜ SONU ===== -->
 
         <p>Seninle geçen her saniye çok kıymetli.</p>
 
@@ -98,28 +231,102 @@
                 <canvas id="scratchCanvas"></canvas>
             </div>
         </div>
+
+        <!-- Bilgi Kartları Başlangıç -->
+        <div class="info-cards-section">
+            <h2 style="text-align:center;margin-bottom:18px;">En Güzel Anlarımız 💌</h2>
+            <div class="info-cards-grid">
+                <div class="info-card">
+                    <div class="info-card-icon">🗓️</div>
+                    <div class="info-card-title">Aşkımızın Başlangıcı</div>
+                    <div class="info-card-date">Tarih:04.10.2025</div>
+                    <div class="info-card-place">Yer:IIBF Durağı Önü Çardakta</div>
+                    <div class="info-card-quote">"İyi ki benimsin"</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon">💋</div>
+                    <div class="info-card-title">İlk Öpüşmemiz</div>
+                    <div class="info-card-date">Tarih:24.10.2025</div>
+                    <div class="info-card-place">Yer:Fakülte Altındaki Ağaçların Altı</div>
+                    <div class="info-card-quote">"Harika bi histi"</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon">🎵</div>
+                    <div class="info-card-title">Şarkımız</div>
+                    <div class="info-card-date">Sanatçı: Dolu Kadehi Ters Tut</div>
+                    <div class="info-card-place">Şarkı: Dilerim Ki</div>
+                    <div class="info-card-quote">"Asla caymazsın benim olmaktan"</div>
+                </div>
+                <!-- Daha fazla kart ekleyebilirsin -->
+            </div>
+        </div>
+        <!-- Bilgi Kartları Son -->
     </div>
 
-    <!-- Modal Kutusu -->
+
+
+
+
+
+    <!-- Modal Kutusu (Tam Ekran Kapsaması İçin En Altta) -->
     <div id="imageModal" class="modal">
         <span class="close-btn" onclick="closeModal()">&times;</span>
         <button class="nav-btn prev-btn" onclick="prevImage()">&#10094;</button>
         <button class="nav-btn next-btn" onclick="nextImage()">&#10095;</button>
         <div class="modal-content">
-            <img id="modalImage" src="" alt="Büyütülmüş Fotoğraf">
-            <textarea id="modalText"
-                placeholder="Bu fotoğrafla ilgili bir anı veya not yaz... (Yazdıkların otomatik kaydedilir)"
-                oninput="saveText()"></textarea>
+                <div class="modal-memory-header">
+                    <span>Bu Anıya Bir Not 💜</span>
+                    <small>Yazdığın not otomatik kaydedilir.</small>
+                </div>
+                <img id="modalImage" src="" alt="Büyütülmüş Fotoğraf">
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-top: 15px; margin-bottom: -10px; font-style: italic;">"Bu anı seninle güzel..."</p>
+                <textarea id="modalText"
+                    placeholder="Bu fotoğrafla ilgili bir anı veya not yaz... (Yazdıkların otomatik kaydedilir)"
+                    oninput="saveText()"></textarea>
         </div>
     </div>
 
+    <script src="script.js"></script>
     <!-- ===== SPOTIFY MÜZİK ÇALAR MODÜLÜ ===== -->
     <div class="spotify-player-container">
-        <iframe style="border-radius: 12px" src="https://open.spotify.com/intl-tr/track/2ipNyTcdbr2oJhNtgE91vD" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <iframe id="spotifyIframe" style="border-radius: 12px" src="https://open.spotify.com/embed/playlist/2aWbKCbxj0SurjjNNe8OhC?si=_B8nG1T3SoS477co3orjbg
+        " width="100%" height="152" frameBorder="0" allowfullscreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
     <!-- ===== SPOTIFY MÜZİK ÇALAR MODÜLÜ SONU ===== -->
+    <!-- Gizli İpucu -->
+    <div id="secretHint" class="secret-hint"></div>
 
-    <script src="script.js"></script>
+    <!-- Gizli Mesaj Modalı -->
+    <div id="secretMessageOverlay" class="secret-overlay">
+        <div id="secretMessageModal" class="secret-modal">
+            <span class="secret-close-btn">&times;</span>
+            <div class="secret-modal-icon">💜</div>
+            <div id="secretTypewriterText" class="secret-text"></div>
+            <div class="secret-sparkles">✨ ✨ ✨</div>
+        </div>
+    </div>
+
+    <!-- ===== AŞK MEKTUBU MODALI ===== -->
+    <div id="loveLetterOverlay" class="love-letter-overlay" style="display: none;">
+        <div id="loveLetterModal" class="love-letter-modal">
+            <span id="closeLoveLetterBtn" class="love-letter-close">&times;</span>
+            <h2 class="love-letter-title">Kalbimden Sana 💌</h2>
+
+            <div class="love-letter-content-wrapper">
+                <p id="loveLetterText"></p><span class="typing-cursor">|</span>
+            </div>
+
+            <p class="love-letter-footer">Bu mektup her açıldığında aynı şeyi söylüyor: Seni seviyorum 💜</p>
+        </div>
+    </div>
+    <!-- ===== AŞK MEKTUBU MODALI SONU ===== -->
+
+    <!-- Favori Bildirim Toast'ı -->
+    <div id="favoriteToast" class="favorite-photo-toast">Favorilere eklendi 💜</div>
+
 </body>
+
+
 
 </html>

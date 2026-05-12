@@ -28,22 +28,39 @@
         /* ─── Arka plan parçacıkları ─── */
         .particles {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 0;
         }
+
         .particle {
             position: absolute;
             font-size: 18px;
             animation: floatUp linear infinite;
             opacity: 0;
         }
+
         @keyframes floatUp {
-            0%   { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            10%  { opacity: 0.6; }
-            90%  { opacity: 0.3; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.6;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
         }
 
         /* ─── İçerik ─── */
@@ -106,8 +123,15 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .game-title {
@@ -126,9 +150,9 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255,255,255,0.06);
+            background: rgba(255, 255, 255, 0.06);
             color: #d1d5db;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 12px 30px;
             border-radius: 50px;
             font-family: 'Outfit', sans-serif;
@@ -137,9 +161,9 @@
             text-decoration: none;
             transition: all 0.25s ease;
         }
-        
+
         .btn-secondary:hover {
-            background: rgba(255,255,255,0.12);
+            background: rgba(255, 255, 255, 0.12);
             color: white;
         }
     </style>
@@ -160,25 +184,25 @@
                 <div class="game-title">Hafıza Oyunu</div>
                 <div class="game-desc">Güzel anılarımızı eşleştirerek hafızanı test et! 💜</div>
             </a>
-            
+
             <a href="ask-testi.html" class="game-card">
                 <div class="game-icon">💝</div>
                 <div class="game-title">Aşk Testi</div>
                 <div class="game-desc">Beni ne kadar iyi tanıyorsun? Soruları cevapla, puanları topla! ✨</div>
             </a>
-            
+
             <a href="ask-yilani.html" class="game-card">
                 <div class="game-icon">🐍</div>
                 <div class="game-title">Aşk Yılanı</div>
                 <div class="game-desc">Kalpleri topla, sevgimizi büyüt! 🐍❤️</div>
             </a>
-            
+
             <a href="ask-kanatlari.html" class="game-card">
                 <div class="game-icon">🕊️</div>
                 <div class="game-title">Aşk Kanatları</div>
                 <div class="game-desc">Engelleri aş, birlikte geçen günleri artır! 💜</div>
             </a>
-            
+
             <a href="askin-parcalari.html" class="game-card">
                 <div class="game-icon">🧩</div>
                 <div class="game-title">Aşkın Parçaları</div>
@@ -207,4 +231,5 @@
         createParticles();
     </script>
 </body>
+
 </html>

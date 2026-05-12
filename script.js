@@ -1,3 +1,33 @@
+// ===== GİRİŞ EKRANI (SPLASH SCREEN) =====
+function enterSite() {
+    // ── 1. HTML5 Audio ile müziği başlat (kullanıcı tıklaması = tarayıcı izni ✅) ──
+    const audio = document.getElementById('bgMusic');
+    if (audio) {
+        audio.volume = 0.75;
+        audio.play().catch(() => {
+            // Dosya bulunamadıysa sessizce geç; Spotify widget'ı görünür kalır
+        });
+    }
+
+    // ── 2. Spotify iframe'e de autoplay ver (Premium hesaplarda çalışır) ──
+    const iframe = document.getElementById('spotifyIframe');
+    if (iframe) {
+        iframe.src = 'https://open.spotify.com/embed/track/6cjIlxXM1ca6nxkJ0p27jU?autoplay=1&utm_source=generator';
+    }
+
+    // ── 3. Butonu devre dışı bırak (çift tıklamayı önle) ──
+    const btn = document.getElementById('splashEnterBtn');
+    if (btn) btn.disabled = true;
+
+    // ── 4. Giriş ekranını fade-out ile kapat ──
+    const splash = document.getElementById('splashScreen');
+    if (splash) {
+        splash.classList.add('fade-out');
+        setTimeout(() => { splash.style.display = 'none'; }, 1300);
+    }
+}
+// ===== GİRİŞ EKRANI SONU =====
+
 // ===== GECE MODU ÖZELLİĞİ =====
 document.addEventListener("DOMContentLoaded", function () {
     const isDarkMode = localStorage.getItem("darkMode") === "true";
@@ -72,35 +102,91 @@ function createStars() {
     }
 }
 
-// ===== SAYAÇ =====
+// --- SAYAÇLAR ---
 const baslangic = new Date("2025-10-04T20:00:00");
-function sayac() {
-    const simdi = new Date();
-    const fark = simdi - baslangic;
-    const gun = Math.floor(fark / (1000 * 60 * 60 * 24));
-    document.getElementById("counter").innerText = gun + " Gündür Beraberiz";
+
+function updateAllCounters() {
+    const now = new Date();
+
+    // 1. Beraberlik Sayacı
+    const togetherDiff = now - baslangic;
+    const togetherDays = Math.floor(togetherDiff / (1000 * 60 * 60 * 24));
+    const counterEl = document.getElementById("counter");
+    if (counterEl) counterEl.innerText = togetherDays + " Gündür Beraberiz";
+
+    // 2. Doğum Günü Sayacı (13 Mayıs)
+    const birthdayMonth = 5;
+    const birthdayDay = 13;
+    let bday = new Date(now.getFullYear(), birthdayMonth - 1, birthdayDay);
+    if (now > bday) bday = new Date(now.getFullYear() + 1, birthdayMonth - 1, birthdayDay);
+
+    const bdayDiff = bday - now;
+    const bdayCountdownEl = document.getElementById("birthdayCountdown");
+    const bdayMessageEl = document.getElementById("birthdayMessage");
+
+    if (now.getMonth() === birthdayMonth - 1 && now.getDate() === birthdayDay) {
+        if (bdayCountdownEl) bdayCountdownEl.style.display = "none";
+        if (bdayMessageEl) bdayMessageEl.style.display = "block";
+    } else {
+        if (bdayCountdownEl) bdayCountdownEl.style.display = "flex";
+        if (bdayMessageEl) bdayMessageEl.style.display = "none";
+        const d = document.getElementById("days");
+        const h = document.getElementById("hours");
+        const m = document.getElementById("minutes");
+        const s = document.getElementById("seconds");
+        if (d) d.textContent = Math.floor(bdayDiff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+        if (h) h.textContent = Math.floor((bdayDiff / (1000 * 60 * 60)) % 24).toString().padStart(2, '0');
+        if (m) m.textContent = Math.floor((bdayDiff / 1000 / 60) % 60).toString().padStart(2, '0');
+        if (s) s.textContent = Math.floor((bdayDiff / 1000) % 60).toString().padStart(2, '0');
+    }
+
+    // 3. Yıldönümü Sayacı (4 Ekim)
+    let anni = new Date(now.getFullYear(), 9, 4);
+    if (now > anni) anni = new Date(now.getFullYear() + 1, 9, 4);
+
+    const anniDiff = anni - now;
+    const anniCountdownEl = document.getElementById("anniversaryCountdown");
+    const anniMessageEl = document.getElementById("anniversaryMessage");
+
+    if (now.getMonth() === 9 && now.getDate() === 4) {
+        if (anniCountdownEl) anniCountdownEl.style.display = "none";
+        if (anniMessageEl) anniMessageEl.style.display = "block";
+    } else {
+        if (anniCountdownEl) anniCountdownEl.style.display = "flex";
+        if (anniMessageEl) anniMessageEl.style.display = "none";
+        const ad = document.getElementById("anni-days");
+        const ah = document.getElementById("anni-hours");
+        const am = document.getElementById("anni-minutes");
+        const as = document.getElementById("anni-seconds");
+        if (ad) ad.textContent = Math.floor(anniDiff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+        if (ah) ah.textContent = Math.floor((anniDiff / (1000 * 60 * 60)) % 24).toString().padStart(2, '0');
+        if (am) am.textContent = Math.floor((anniDiff / 1000 / 60) % 60).toString().padStart(2, '0');
+        if (as) as.textContent = Math.floor((anniDiff / 1000) % 60).toString().padStart(2, '0');
+    }
 }
-setInterval(sayac, 1000);
+
+setInterval(updateAllCounters, 1000);
+document.addEventListener("DOMContentLoaded", updateAllCounters);
 
 // Havada Süzülen Kalpler Efekti
 function createHeart() {
     const heart = document.createElement("div");
     heart.classList.add("heart-particle");
     heart.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='100%' height='100%'><path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' fill='currentColor'/></svg>`;
-    const size = Math.random() * 20 + 15;
+    const size = Math.random() * 25 + 20; // Boyut büyütüldü (20px-45px)
     heart.style.width = size + "px";
     heart.style.height = size + "px";
     heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = Math.random() * 4 + 4 + "s";
+    heart.style.animationDuration = Math.random() * 3 + 4 + "s";
     const isDarkMode = document.body.classList.contains("dark-mode");
     const colors = isDarkMode
-        ? ["#8a2be2", "#9b59b6", "#d100ff", "#a600ff", "#6a0dad"]
-        : ["#ffffff", "#f8f8ff", "#fffafa", "#f5f5f5", "#f0f8ff"];
+        ? ["#a855f7", "#ec4899", "#d100ff", "#a600ff", "#7c3aed"]
+        : ["#ec4899", "#f472b6", "#a855f7", "#d946ef", "#ff85c0"]; // Açık modda da renkli kalpler
     heart.style.color = colors[Math.floor(Math.random() * colors.length)];
     document.body.appendChild(heart);
     setTimeout(() => { heart.remove(); }, 8000);
 }
-setInterval(createHeart, 400);
+setInterval(createHeart, 300); // Sıklık artırıldı (400ms -> 300ms)
 
 // Evet - Hayır Butonu Etkileşimi
 const btnNo = document.getElementById("btnNo");
@@ -124,56 +210,56 @@ function loveYes() {
 function createExplosionHeart() {
     const card = document.querySelector('.card');
     if (!card) return;
-    
+
     const heart = document.createElement("div");
     heart.classList.add("heart-particle", "explosion");
     heart.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='100%' height='100%'><path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' fill='currentColor'/></svg>`;
-    
+
     const size = Math.random() * 30 + 15;
     heart.style.width = size + "px";
     heart.style.height = size + "px";
-    
+
     // Kart merkezi
     const centerX = card.offsetWidth / 2;
     const centerY = card.offsetHeight / 2;
-    
+
     // Kart içinden rastgele bir nokta seç
     const startX = Math.random() * (card.offsetWidth * 0.8) + (card.offsetWidth * 0.1);
     const startY = Math.random() * (card.offsetHeight * 0.8) + (card.offsetHeight * 0.1);
-    
+
     heart.style.left = startX + "px";
     heart.style.top = startY + "px";
     heart.style.transform = "translate(-50%, -50%) scale(0.1)";
     heart.style.zIndex = "50";
     heart.style.pointerEvents = "none";
-    
+
     const isDarkMode = document.body.classList.contains("dark-mode");
     const colors = isDarkMode
         ? ["#8a2be2", "#9b59b6", "#d100ff", "#a600ff", "#6a0dad"]
         : ["#ff69b4", "#ff1493", "#ffb6c1", "#ffc0cb", "#ff85c0"];
     heart.style.color = colors[Math.floor(Math.random() * colors.length)];
-    
+
     // Kart içine ekle
     card.appendChild(heart);
-    
+
     // Etrafa yayıl
     const angle = Math.random() * Math.PI * 2;
     const distance = Math.random() * 100 + 30;
     let tx = Math.cos(angle) * distance;
     let ty = Math.sin(angle) * distance;
-    
+
     // Sınırları kontrol et - kartın dışına çıkmasın
     const maxTx = (card.offsetWidth / 2) - 30;
     const maxTy = (card.offsetHeight / 2) - 30;
     tx = Math.max(-maxTx, Math.min(maxTx, tx));
     ty = Math.max(-maxTy, Math.min(maxTy, ty));
-    
+
     setTimeout(() => {
         heart.style.transition = "transform 1.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.5s ease-out";
         heart.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.2)`;
         heart.style.opacity = "0";
     }, 10);
-    
+
     setTimeout(() => { heart.remove(); }, 1500);
 }
 
@@ -185,14 +271,31 @@ let currentScale = 1;
 let galleryImages = [];
 let currentImageIndex = -1;
 
-// Galeri resimlerini al ve tıklama olaylarını ekle
-galleryImages = Array.from(document.querySelectorAll('.gallery img'));
-galleryImages.forEach((img, index) => {
-    img.style.cursor = 'pointer';
-    img.addEventListener('click', function () {
-        openModal(index);
+// Galeri resimlerini al, karıştır ve tıklama olaylarını ekle
+function initGallery() {
+    const gallery = document.querySelector('.gallery');
+    if (!gallery) return;
+
+    let images = Array.from(gallery.querySelectorAll('img'));
+
+    // Fisher-Yates Karıştırma Algoritması
+    for (let i = images.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        gallery.appendChild(images[j]); // Sona ekleyerek sırayı değiştirir
+        [images[i], images[j]] = [images[j], images[i]];
+    }
+
+    // Karıştırılmış yeni listeyi al ve olayları ekle
+    galleryImages = Array.from(gallery.querySelectorAll('img'));
+    galleryImages.forEach((img, index) => {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', function () {
+            openModal(index);
+        });
     });
-});
+}
+
+document.addEventListener("DOMContentLoaded", initGallery);
 
 function openModal(index) {
     if (index < 0 || index >= galleryImages.length) return;
@@ -229,9 +332,15 @@ modalImg.addEventListener('wheel', function (e) {
     modalImg.style.transform = `scale(${currentScale})`;
 });
 
-function closeModal() { modal.style.display = "none"; }
+function closeModal() {
+    modal.style.display = "none";
+}
 function saveText() { localStorage.setItem(currentImageSrc, modalText.value); }
-modal.addEventListener('click', function (e) { if (e.target === modal) { closeModal(); } });
+modal.addEventListener('click', function (e) {
+    if (e.target === modal) {
+        closeModal();
+    }
+});
 
 document.addEventListener("keydown", function (e) {
     // Textarea veya input odaklanmışsa kısayolları engelle
@@ -278,11 +387,12 @@ const scratchSurprises = [
     { src: "foto15.jpeg", message: "Dünyadaki en şanslı insan benim. 🍀💜" }
 ];
 
-document.addEventListener("DOMContentLoaded", function () {
+function initScratchCard() {
     const canvas = document.getElementById("scratchCanvas");
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
+    // Sürpriz seçimi
     const randomSurprise = scratchSurprises[Math.floor(Math.random() * scratchSurprises.length)];
     const scratchImageElement = document.querySelector(".scratch-image");
     const scratchMessageElement = document.querySelector(".scratch-message");
@@ -297,36 +407,49 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function resizeCanvas() {
         const wrapper = document.querySelector('.scratch-wrapper');
+        if (!wrapper) return;
         canvas.width = wrapper.offsetWidth;
         canvas.height = wrapper.offsetHeight;
         if (!isRevealed) { fillCanvas(); }
     }
 
     function fillCanvas() {
-        ctx.fillStyle = "#a89eb5";
+        const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        grad.addColorStop(0, "#c084fc");
+        grad.addColorStop(0.5, "#a855f7");
+        grad.addColorStop(1, "#7c3aed");
+
+        ctx.fillStyle = grad;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "bold 24px 'Segoe UI', sans-serif";
+
+        ctx.fillStyle = "rgba(255,255,255,0.15)";
+        for (let i = 0; i < 150; i++) {
+            ctx.beginPath();
+            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 1, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.font = "bold 24px 'Outfit', sans-serif";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
-        ctx.fillText("Kazı Beni!", canvas.width / 2, canvas.height / 2);
+        ctx.textBaseline = "middle";
+        ctx.fillText("Kazı Beni! ❤️", canvas.width / 2, canvas.height / 2);
     }
 
     window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+
+    // Boyutların doğru alınması için hafif bir gecikme ile başlat
+    setTimeout(resizeCanvas, 100);
 
     function getXY(e) {
         const rect = canvas.getBoundingClientRect();
-        let scaleX = canvas.width / rect.width;
-        let scaleY = canvas.height / rect.height;
-        if (e.type.includes('touch')) {
-            return {
-                x: (e.touches[0].clientX - rect.left) * scaleX,
-                y: (e.touches[0].clientY - rect.top) * scaleY
-            };
-        }
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        // Sayfada zoom: 0.8 olduğu için koordinatları 0.8'e bölerek gerçek canvas konumunu buluyoruz
         return {
-            x: (e.clientX - rect.left) * scaleX,
-            y: (e.clientY - rect.top) * scaleY
+            x: (clientX - rect.left) / 0.8,
+            y: (clientY - rect.top) / 0.8
         };
     }
 
@@ -337,64 +460,50 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.fill();
     }
 
-    function handleDown(e) {
-        if (isRevealed) return;
-        isDrawing = true;
-        const pos = getXY(e);
-        scratch(pos.x, pos.y);
-    }
+    canvas.addEventListener("mousedown", (e) => { isDrawing = true; const p = getXY(e); scratch(p.x, p.y); });
+    canvas.addEventListener("mousemove", (e) => { if (isDrawing) { const p = getXY(e); scratch(p.x, p.y); } });
+    window.addEventListener("mouseup", () => { if (isDrawing) { isDrawing = false; checkReveal(); } });
 
-    function handleMove(e) {
-        if (!isDrawing || isRevealed) return;
-        if (e.cancelable) e.preventDefault();
-        const pos = getXY(e);
-        scratch(pos.x, pos.y);
-        if (Math.random() > 0.8) { checkReveal(); }
-    }
-
-    function handleUp() { isDrawing = false; if (!isRevealed) checkReveal(); }
-
-    canvas.addEventListener("mousedown", handleDown);
-    canvas.addEventListener("mousemove", handleMove);
-    window.addEventListener("mouseup", handleUp);
-    canvas.addEventListener("touchstart", handleDown, { passive: false });
-    canvas.addEventListener("touchmove", handleMove, { passive: false });
-    window.addEventListener("touchend", handleUp);
+    canvas.addEventListener("touchstart", (e) => { isDrawing = true; const p = getXY(e); scratch(p.x, p.y); e.preventDefault(); }, { passive: false });
+    canvas.addEventListener("touchmove", (e) => { if (isDrawing) { const p = getXY(e); scratch(p.x, p.y); e.preventDefault(); } }, { passive: false });
+    window.addEventListener("touchend", () => { if (isDrawing) { isDrawing = false; checkReveal(); } });
 
     function checkReveal() {
         if (isRevealed) return;
         const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-        let transparentPixels = 0;
-        const totalPixels = pixels.length / 4;
-        for (let i = 0; i < pixels.length; i += 128) {
-            if (pixels[i + 3] < 128) { transparentPixels++; }
-        }
-        const scratchedPercentage = transparentPixels / (totalPixels / 32);
-        if (scratchedPercentage > 0.95) {
-            isRevealed = true;
-            canvas.style.transition = "opacity 0.8s ease";
-            canvas.style.opacity = "0";
-            setTimeout(() => {
-                canvas.style.display = "none";
-                for (let i = 0; i < 40; i++) { setTimeout(createExplosionHeart, Math.random() * 800); }
-            }, 800);
-        }
+        let transparent = 0;
+        for (let i = 0; i < pixels.length; i += 40) { if (pixels[i + 3] === 0) transparent++; }
+        if (transparent / (pixels.length / 40) > 0.45) revealAll();
     }
+
+    function revealAll() {
+        if (isRevealed) return;
+        isRevealed = true;
+        canvas.style.transition = "opacity 1s ease, transform 1.5s ease";
+        canvas.style.opacity = "0";
+        canvas.style.transform = "scale(1.2)";
+        setTimeout(() => { canvas.style.display = "none"; for (let i = 0; i < 30; i++) { setTimeout(createExplosionHeart, i * 60); } }, 1000);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    initScratchCard();
 });
+
 
 // ===== ZAMAN DUYARLI KARŞILAMA MODÜLÜ =====
 function updateTimeGreeting() {
     const greetingElement = document.getElementById("timeGreeting");
     if (!greetingElement) return;
-    
+
     const now = new Date();
     const hours = now.getHours();
-    
+
     let greeting = "";
-    
+
     // Saat aralıklarına göre mesaj seçimi
     if (hours >= 5 && hours < 12) {
-        greeting = "Günaydın gün ışığım! ☀️";
+        greeting = "Günaydın, Günışığım! ☀️";
     } else if (hours >= 12 && hours < 18) {
         greeting = "Tünaydın sevgilim! 🌸";
     } else if (hours >= 18 && hours < 22) {
@@ -402,25 +511,24 @@ function updateTimeGreeting() {
     } else {
         greeting = "Hala uyumadın mı sevgilim? 🌙";
     }
-    
+
     // Mesaj değişiminde fade efekti
     if (greetingElement.textContent !== greeting) {
         greetingElement.style.opacity = "0";
-        greetingElement.style.transform = "translateX(-50%) translateY(-10px)";
-        
+        greetingElement.style.transform = "translateY(-10px)";
+
         setTimeout(() => {
             greetingElement.textContent = greeting;
-            greetingElement.style.transition = "opacity 0.6s ease, transform 0.6s ease";
             greetingElement.style.opacity = "1";
-            greetingElement.style.transform = "translateX(-50%) translateY(0)";
-        }, 300);
+            greetingElement.style.transform = "translateY(0)";
+        }, 500);
     }
 }
 
 // Sayfa yüklendiğinde hemen çalıştır
 document.addEventListener("DOMContentLoaded", function () {
     updateTimeGreeting(); // İlk çalıştırma
-    
+
     // Saati güncelle (her dakika başında)
     setInterval(updateTimeGreeting, 60000);
 });
@@ -431,4 +539,377 @@ document.addEventListener("visibilitychange", function () {
         updateTimeGreeting();
     }
 });
-// ===== ZAMAN DUYARLI KARŞILAMA MODÜLÜ SONU =====
+
+// ===== GİZLİ MESAJ (EASTER EGG) MANTIĞI =====
+function initEasterEgg() {
+    let clicks = 0;
+    const heart = document.querySelector(".heart-icon");
+    const overlay = document.getElementById("secretMessageOverlay");
+    const badge = document.getElementById("secretBadge");
+    const hint = document.getElementById("secretHint");
+    const textTarget = document.getElementById("secretTypewriterText");
+    const closeBtn = document.querySelector(".secret-close-btn");
+
+    if (!heart || !overlay || !hint) return;
+
+    // Badge'i kapatma fonksiyonunu global yapalım ki HTML'den erişilebilsin
+    window.dismissSecretBadge = (e) => {
+        if (e) e.stopPropagation();
+        if (badge) {
+            badge.style.opacity = "0";
+            setTimeout(() => { badge.style.display = "none"; }, 500);
+            sessionStorage.setItem("secretBadgeDismissed", "true");
+        }
+    };
+
+    const message = "Bunu bulacağını biliyordum...\nSana söylemek istediğim gizli bir şey var:\nİyi ki hayatımdasın. Seni sandığından çok daha fazla seviyorum 💜";
+    const hintTexts = ["Bir şey mi arıyorsun? 💜", "Devam et...", "Yaklaştın ✨", "Bir tık daha..."];
+
+    // Sayfa yüklendiğinde mesaj önceden bulunmuşsa ve bu oturumda kapatılmamışsa göster
+    if (localStorage.getItem("secretMessageFound") === "true" && !sessionStorage.getItem("secretBadgeDismissed")) {
+        if (badge) {
+            badge.style.display = "block";
+            badge.style.opacity = "1";
+            // 8 saniye sonra otomatik gizle (çok rahatsız etmemesi için)
+            setTimeout(() => {
+                if (!sessionStorage.getItem("secretBadgeDismissed") && badge.style.display !== "none") {
+                    badge.style.opacity = "0";
+                    setTimeout(() => { badge.style.display = "none"; }, 500);
+                }
+            }, 8000);
+        }
+    }
+
+    heart.addEventListener("click", function (e) {
+        clicks++;
+        if (clicks < 5) {
+            hint.textContent = hintTexts[clicks - 1];
+            hint.style.left = (e.clientX + 15) + "px";
+            hint.style.top = (e.clientY - 40) + "px";
+            hint.style.opacity = "1";
+            hint.style.display = "block";
+            setTimeout(() => {
+                if (hint.style.opacity === "1") hint.style.opacity = "0";
+            }, 1000);
+        } else {
+            clicks = 0;
+            overlay.style.display = "flex";
+            setTimeout(() => overlay.classList.add("active"), 10);
+
+            textTarget.textContent = "";
+            let i = 0;
+            function type() {
+                if (i < message.length) {
+                    textTarget.textContent += message.charAt(i);
+                    i++;
+                    setTimeout(type, 50);
+                }
+            }
+            setTimeout(type, 600);
+
+            // localStorage'a kaydet ve rozeti göster
+            localStorage.setItem("secretMessageFound", "true");
+            if (badge) {
+                badge.style.display = "block";
+                badge.style.opacity = "1";
+            }
+        }
+    });
+
+    const closeSecret = () => {
+        overlay.classList.remove("active");
+        setTimeout(() => { overlay.style.display = "none"; textTarget.textContent = ""; }, 500);
+    };
+
+    if (closeBtn) closeBtn.onclick = closeSecret;
+    overlay.onclick = (e) => { if (e.target === overlay) closeSecret(); };
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSecret(); });
+}
+
+window.addEventListener("load", initEasterEgg);
+
+/* =========================================
+   AŞK MEKTUBU MODÜLÜ (TYPEWRITER EFFECT)
+========================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+    // 13. Kural: Element Kontrolü (Hata vermemesi için)
+    const openBtn = document.getElementById("openLoveLetterBtn");
+    if (!openBtn) return;
+
+    const overlay = document.getElementById("loveLetterOverlay");
+    const closeBtn = document.getElementById("closeLoveLetterBtn");
+    const letterTextEl = document.getElementById("loveLetterText");
+    const footerEl = document.querySelector(".love-letter-footer");
+
+    // 18. Kural: Mektup metnini buradan kolayca değiştirebilirsin
+    // '\n' işaretleri alt satıra geçmek içindir
+    const loveLetterMessage = `Merve,\n\nBu siteyi sana sadece güzel görünsün diye yapmadım.
+    \nHer açtığında, seni düşündüğümü hisset diye yaptım.
+    \nBeraber geçirdiğimiz her saniye benim için çok kıymetli.
+    \nGülüşün, sesin, varlığın hepsi bana huzur veriyor.Seninle gezmek yanında olmak yemek yemek hepsi çok güzel.Senin kendinde kusur olarak gördüğün her şey benim için mükemmel.
+    \nBazen tartışsak da kavga etsek de sana hiç darılamıyorum seni çok seviyorum.Bana sevmeyi ve sevilmeyi öğrettiğin
+    için teşekkür ederim.Her şeyini seviyorum senin.Yanağını, gözlerini dudağını, kokunu, sesini, bakışını, dokunuşunu, her şeyini, her 
+    şeyini seviyorum.Sana gerçekten aşığım.Sensiz yapamıyorum.
+    \nUmarım beğenirsin sevgilim.
+    \nİyi ki varsın, iyi ki benimlesin.İyi ki doğdun sevgilim.
+    \nSeni çok seviyorum 💜`;
+
+    let typingInterval;
+
+    function openModal() {
+        overlay.style.display = "flex";
+
+        // CSS transition animasyonunun çalışması için ufak bir gecikme
+        setTimeout(() => {
+            overlay.classList.add("show");
+        }, 10);
+
+        startTypewriter();
+        createSparkles(); // 20. Kural: Hafif kalp/parıltı efekti
+    }
+
+    function closeModal() {
+        overlay.classList.remove("show");
+
+        // Modalın kapanış animasyonu bittikten sonra gizle ve animasyonu sıfırla
+        setTimeout(() => {
+            overlay.style.display = "none";
+            clearInterval(typingInterval);
+        }, 400);
+    }
+
+    function startTypewriter() {
+        // 12. Kural: Butona tekrar basılırsa önce eskisini durdur
+        clearInterval(typingInterval);
+
+        // Her açılışta yazıyı sıfırla (11. Kural)
+        letterTextEl.textContent = "";
+        footerEl.style.opacity = "0";
+
+        let index = 0;
+
+        // Daktilo hızı (40ms - 17. Kural: okunabilir hızda)
+        typingInterval = setInterval(() => {
+            if (index < loveLetterMessage.length) {
+                letterTextEl.textContent += loveLetterMessage.charAt(index);
+                index++;
+            } else {
+                clearInterval(typingInterval);
+                footerEl.style.opacity = "1"; // Yazı bitince alttaki tatlı not ortaya çıkar
+            }
+        }, 40);
+    }
+
+    function createSparkles() {
+        const modal = document.getElementById("loveLetterModal");
+
+        // Modal açıldığında rastgele konumlarda 5 adet parıltı (✨) oluştur
+        for (let i = 0; i < 5; i++) {
+            const sparkle = document.createElement("div");
+            sparkle.innerHTML = "✨";
+            sparkle.style.position = "absolute";
+            // Modal içinden dışarı taşmamaları için %10 - %90 arası sınırlar
+            sparkle.style.left = (10 + Math.random() * 80) + "%";
+            sparkle.style.top = (10 + Math.random() * 80) + "%";
+            sparkle.style.opacity = "0";
+            sparkle.style.pointerEvents = "none";
+            sparkle.style.animation = `loveSparkleAnim 1.5s ease-in-out ${Math.random() * 0.4}s`;
+
+            modal.appendChild(sparkle);
+
+            // İşlevi biten elementi DOM'dan temizle
+            setTimeout(() => {
+                sparkle.remove();
+            }, 2000);
+        }
+    }
+
+    // Event Listener'lar
+    openBtn.addEventListener("click", openModal);
+    closeBtn.addEventListener("click", closeModal);
+
+    // 10. Kural: Modal dışına (overlay) tıklayınca kapatma
+    overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) {
+            closeModal();
+        }
+    });
+
+    // 9. Kural: Klavyeden ESC tuşuna basınca kapatma
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && overlay.style.display === "flex") {
+            closeModal();
+        }
+    });
+});
+
+/* =========================================
+   FAVORİ FOTOĞRAF MODÜLÜ
+========================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const gallery = document.querySelector(".gallery");
+    if (!gallery) return;
+
+    let favorites = JSON.parse(localStorage.getItem("favoritePhotos")) || [];
+    const favCountEl = document.getElementById("favCount");
+    const toggleBtn = document.getElementById("toggleFavoritesBtn");
+    const toast = document.getElementById("favoriteToast");
+
+    function updateCounter() { if (favCountEl) favCountEl.textContent = favorites.length; }
+
+    // Kalp butonlarını oluştur ve galeriye ekle (resimlerin içine değil, yanına)
+    function initHearts() {
+        const imgs = gallery.querySelectorAll("img");
+        imgs.forEach((img, index) => {
+            const src = img.getAttribute("src");
+            const btn = document.createElement("button");
+            btn.className = "favorite-photo-btn";
+            btn.dataset.targetSrc = src;
+            btn.innerHTML = favorites.includes(src) ? "❤️" : "🤍";
+            if (favorites.includes(src)) {
+                btn.classList.add("active");
+                img.classList.add("favorite-glow");
+            }
+
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                const isFav = favorites.includes(src);
+                if (isFav) {
+                    favorites = favorites.filter(s => s !== src);
+                    btn.innerHTML = "🤍";
+                    btn.classList.remove("active");
+                    img.classList.remove("favorite-glow");
+                } else {
+                    favorites.push(src);
+                    btn.innerHTML = "❤️";
+                    btn.classList.add("active");
+                    img.classList.add("favorite-glow");
+                    showToast();
+                }
+                localStorage.setItem("favoritePhotos", JSON.stringify(favorites));
+                updateCounter();
+                if (gallery.classList.contains("favorites-only")) filterGallery();
+            };
+            gallery.appendChild(btn);
+        });
+        updatePositions();
+    }
+
+    // Butonları resimlerin sağ üst köşesine hizala
+    function updatePositions() {
+        const btns = gallery.querySelectorAll(".favorite-photo-btn");
+        btns.forEach(btn => {
+            const targetImg = gallery.querySelector(`img[src="${btn.dataset.targetSrc}"]`);
+            if (targetImg && targetImg.style.display !== "none") {
+                btn.style.opacity = "1";
+                btn.style.pointerEvents = "auto";
+                btn.style.top = targetImg.offsetTop + 10 + "px";
+                btn.style.left = (targetImg.offsetLeft + targetImg.offsetWidth - 48) + "px";
+                // Resmin rotasyonunu butona da uygula (Senkronize hareket)
+                btn.style.transform = window.getComputedStyle(targetImg).transform;
+            } else {
+                btn.style.opacity = "0";
+                btn.style.pointerEvents = "none";
+            }
+        });
+    }
+
+    function filterGallery() {
+        const imgs = gallery.querySelectorAll("img");
+        imgs.forEach(img => {
+            const src = img.getAttribute("src");
+            img.style.display = gallery.classList.contains("favorites-only") && !favorites.includes(src) ? "none" : "block";
+        });
+        updatePositions();
+    }
+
+    function showToast() {
+        if (!toast) return;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2000);
+    }
+
+    if (toggleBtn) {
+        toggleBtn.onclick = () => {
+            gallery.classList.toggle("favorites-only");
+            toggleBtn.classList.toggle("active");
+            toggleBtn.textContent = gallery.classList.contains("favorites-only") ? "Tümünü Göster" : "Sadece Favorileri Göster";
+            filterGallery();
+        };
+    }
+
+    // Galeri karıştırıldıktan (shuffle) sonra butonları yerleştir
+    setTimeout(initHearts, 100);
+
+    // Pencere boyutu değişirse veya resimler yüklenirse konumları güncelle
+    window.addEventListener("resize", updatePositions);
+    updateCounter();
+});
+
+/* =========================================
+   RUH HALİNE GÖRE MESAJ MODÜLÜ
+========================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const moodSection = document.getElementById("moodMessageSection");
+    if (!moodSection) return;
+
+    const moodButtons = document.querySelectorAll(".mood-btn");
+    const resultCard = document.getElementById("moodResultCard");
+    const resultText = document.getElementById("moodResultText");
+
+    const moodMessages = {
+        sad: "Üzgünsen biraz yanıma gelmiş gibi düşün... Ben seni her halinle seviyorum. Kötü hissettiğin anlarda bile benim için çok değerlisin 🥺💜",
+        miss: "Beni özlediysen bil ki ben de seni özlüyorum. Mesafeler bazen can sıkabilir ama kalbim hep senin yanında 💭💜",
+        happy: "Mutluysan, mutluluğun bana da bulaştı demektir. Gülüşün bana mutluluk veriyor ✨💜",
+        low: "Moralin bozuksa bugün dünyayı biraz kenara bırakalım. Senin güzel kalbin her şeyden daha önemli 🌧️🤍",
+        hug: "Sarılmak istiyorsan gözlerini kapat ve beni yanında hayal et. Keşke şu an sana ben de sımsıkı sarılabilsem 🤍",
+        jealous: "Kıskandıysan bile bu biraz tatlı olabilir. Ama bilmeni isterim ki benim kalbimde senin yerin ayrı ve çok özel 🙈💜",
+        tired: "Yorulduysan biraz dinlen sevgilim. Her şeyi tek başına taşımak zorunda değilsin, ben hep yanındayım 🫶"
+    };
+
+    let selectedMood = localStorage.getItem("selectedMood") || null;
+
+    function closeMoodMessage() {
+        if (resultCard) resultCard.classList.remove("show");
+        moodButtons.forEach(btn => {
+            btn.classList.remove("mood-btn-active");
+        });
+        localStorage.removeItem("selectedMood");
+        selectedMood = null;
+    }
+
+    function openMoodMessage(moodKey, button) {
+        selectedMood = moodKey;
+        localStorage.setItem("selectedMood", moodKey);
+
+        moodButtons.forEach(btn => {
+            btn.classList.remove("mood-btn-active");
+        });
+
+        if (button) button.classList.add("mood-btn-active");
+        if (resultText) resultText.textContent = moodMessages[moodKey];
+        if (resultCard) resultCard.classList.add("show");
+    }
+
+    moodButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const moodKey = button.dataset.mood;
+
+            if (selectedMood === moodKey && resultCard.classList.contains("show")) {
+                closeMoodMessage();
+                return;
+            }
+
+            openMoodMessage(moodKey, button);
+        });
+    });
+
+    // Sayfa yenilenince eğer son seçili ruh hali varsa mesaj yine açılsın
+    if (selectedMood && moodMessages[selectedMood]) {
+        const activeBtn = Array.from(moodButtons).find(btn => btn.dataset.mood === selectedMood);
+        openMoodMessage(selectedMood, activeBtn);
+    }
+});

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 
 <head>
@@ -279,10 +279,11 @@
             background: #1a1a2e;
         }
 
-        .card-back img {
+        .card-back img, .memory-photo {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: inherit;
             display: block;
         }
 
@@ -488,13 +489,35 @@
     </div>
 
     <script>
-        // ─── Fotoğraflar: 4 çift = 8 kart ───
-        const PHOTOS = [
-            'foto2.jpeg',
-            'foto5.jpeg',
-            'foto8.jpeg',
-            'foto12.jpeg',
+        // ─── Fotoğraf Havuzu: Toplam 30 Fotoğraf ───
+        const memoryPhotoPool = [
+            "foto1.jpeg", "foto2.jpeg", "foto3.jpeg", "foto4.jpeg", "foto5.jpeg",
+            "foto6.jpeg", "foto7.jpeg", "foto8.jpeg", "foto9.jpeg", "foto10.jpeg",
+            "foto11.jpeg", "foto12.jpeg", "foto13.jpeg", "foto14.jpeg", "foto15.jpeg",
+            "foto16.jpeg", "foto17.jpeg", "foto18.jpeg", "foto19.jpeg", "foto20.jpeg",
+            "foto21.jpeg", "foto22.jpeg", "foto23.jpeg", "foto24.jpeg", "foto25.jpeg",
+            "foto26.jpeg", "foto27.jpeg", "foto28.jpeg", "foto29.jpeg", "foto30.jpeg"
         ];
+
+        // ─── Yardımcı Fonksiyonlar ───
+        function shuffleArray(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function getRandomMemoryPhotos(pairCount) {
+            const shuffledPhotos = shuffleArray([...memoryPhotoPool]);
+            return shuffledPhotos.slice(0, pairCount);
+        }
+
+        function createMemoryDeck() {
+            const pairCount = 4;
+            const selectedPhotos = getRandomMemoryPhotos(pairCount);
+            const deck = selectedPhotos.flatMap((photo, index) => [
+                { id: index + "-a", photo },
+                { id: index + "-b", photo }
+            ]);
+            return shuffleArray(deck);
+        }
 
         // ─── Oyun durumu ───
         let cards = [];
@@ -569,15 +592,15 @@
             document.getElementById('matchCount').textContent = '0/4';
             document.getElementById('timer').textContent = '00:00';
 
-            // Kartları oluştur: her fotoğraf 2 kez
-            const deck = shuffle([...PHOTOS, ...PHOTOS]);
+            // Kartları oluştur: 4 farklı fotoğraf x 2 = 8 kart
+            const deck = createMemoryDeck();
             const grid = document.getElementById('gameGrid');
             grid.innerHTML = '';
 
-            cards = deck.map((photo, index) => {
+            cards = deck.map((cardData, index) => {
                 const card = document.createElement('div');
                 card.className = 'memory-card';
-                card.dataset.photo = photo;
+                card.dataset.photo = cardData.photo;
                 card.dataset.index = index;
                 card.innerHTML = `
                     <div class="card-inner">
@@ -586,7 +609,7 @@
                             <div class="front-text">Tıkla</div>
                         </div>
                         <div class="card-back">
-                            <img src="${photo}" alt="Anı">
+                            <img src="${cardData.photo}" alt="Anı" class="memory-photo">
                         </div>
                     </div>
                 `;
