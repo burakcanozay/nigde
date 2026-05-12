@@ -913,3 +913,110 @@ document.addEventListener("DOMContentLoaded", () => {
         openMoodMessage(selectedMood, activeBtn);
     }
 });
+
+/* =========================================
+   AŞK ÇARKI MODÜLÜ
+========================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+    const wheel    = document.getElementById("loveWheel");
+    const spinBtn  = document.getElementById("spinLoveWheelBtn");
+    const resultBox  = document.getElementById("loveWheelResult");
+    const resultText = document.getElementById("loveWheelResultText");
+
+    // Element kontrolü — bölüm yoksa sessizce çık
+    if (!wheel || !spinBtn || !resultBox || !resultText) return;
+
+    const loveWheelItems = [
+        "Sana bir iltifat hakkı çıktı 💜",
+        "Sürpriz: Sana kocaman sarılma borcum var 🤍",
+        "Bugünün aşk notu: İyi ki hayatımdasın ✨",
+        "Birlikte dinlenecek bir şarkı seç 🎵",
+        "Bana bugün bir kalp emojisi at ❤️",
+        "Bugün sana ekstra naz yapma hakkı çıktı 🙈",
+        "Birlikte film seçme hakkı sende 🎬",
+        "Sana minicik bir şiir borcum var 📝"
+    ];
+
+    // localStorage'dan önceki rotasyonu yükle (sürekli artan değer, doğal animasyon için)
+    let currentRotation = Number(localStorage.getItem("loveWheelRotation")) || 0;
+    const savedResult   = localStorage.getItem("loveWheelLastResult");
+
+    // Sayfa yenilenince önceki sonucu göster
+    if (savedResult) {
+        resultText.textContent = savedResult;
+        resultBox.classList.add("show");
+    }
+
+    // Çarkı önceki konumuna getir (animasyonsuz, anında)
+    wheel.style.transition = "none";
+    wheel.style.transform  = `rotate(${currentRotation}deg)`;
+
+    // Bir sonraki çevirmede transition aktif olsun
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            wheel.style.transition = "transform 3s cubic-bezier(0.12, 0.72, 0.18, 1)";
+        });
+    });
+
+    spinBtn.addEventListener("click", function () {
+        // Butonu geçici devre dışı bırak
+        spinBtn.disabled = true;
+        spinBtn.textContent = "Dönüyor... 💫";
+
+        // Sonuç kutusunu gizle
+        resultBox.classList.remove("show");
+
+        // ── Açı hesabı ──────────────────────────────────────────────────────
+        // 8 segment, her biri 45°. Segment i, çark üzerinde i×45° konumundadır.
+        // Pointer tepede (0°). Segment i'nin pointer'a gelmesi için:
+        //   (i × 45 + θ) mod 360 = 0  →  θ_hedef = (360 - i × 45) mod 360
+        const segmentCount = loveWheelItems.length;       // 8
+        const segmentAngle = 360 / segmentCount;          // 45°
+
+        const randomIndex = Math.floor(Math.random() * segmentCount);
+
+        // Segment i'nin çark üzerindeki MERKEZ açısı = i×45 + 22.5
+        // Bu merkezi pointer'a (0°/360°) getirmek için:
+        //   θ_hedef = (360 - merkez_açısı) mod 360
+        const segmentCenter = randomIndex * segmentAngle + segmentAngle / 2;
+        const targetMod     = (360 - segmentCenter) % 360;
+
+        // Mevcut rotasyonun 0-360 içindeki karşılığı
+        const currentMod = ((currentRotation % 360) + 360) % 360;
+
+        // Hedefe ulaşmak için gereken en küçük pozitif fark
+        let delta = targetMod - currentMod;
+        if (delta <= 0) delta += 360; // En az biraz dönsün
+
+        // 4 tam tur (1440°) + hassas hizalama açısı
+        currentRotation += 1440 + delta;
+        // ────────────────────────────────────────────────────────────────────
+
+        wheel.style.transition = "transform 3s cubic-bezier(0.12, 0.72, 0.18, 1)";
+        wheel.style.transform  = `rotate(${currentRotation}deg)`;
+
+        // Animasyon bitince sonucu göster (3s + 100ms tolerans)
+        setTimeout(() => {
+            const result = loveWheelItems[randomIndex];
+
+            resultText.textContent = result;
+            resultBox.classList.add("show");
+
+            // localStorage'a kaydet
+            localStorage.setItem("loveWheelLastResult", result);
+            localStorage.setItem("loveWheelRotation",   currentRotation.toString());
+
+            // Kalp patlaması — mevcut fonksiyon varsa kullan
+            if (typeof createExplosionHeart === "function") {
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(createExplosionHeart, Math.random() * 500);
+                }
+            }
+
+            // Butonu tekrar aktif et
+            spinBtn.disabled    = false;
+            spinBtn.textContent = "Tekrar Çevir 💘";
+        }, 3100);
+    });
+});
