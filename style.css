@@ -2895,3 +2895,164 @@ body.dark-mode .love-wheel-result p {
         font-size: 0.95rem !important;
     }
 }
+
+/* ===================================================
+   DOĞUM GÜNÜ ÖZEL KART & KONFETİ
+=================================================== */
+
+.birthday-special-card {
+    margin: 24px auto;
+    padding: 32px 28px;
+    max-width: 680px;
+    border-radius: 30px;
+    text-align: center;
+    background:
+        radial-gradient(circle at 20% 10%, rgba(236, 72, 153, 0.22), transparent 35%),
+        radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.24), transparent 35%),
+        rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(236, 72, 153, 0.30);
+    box-shadow:
+        0 24px 70px rgba(124, 58, 237, 0.20),
+        0 0 35px rgba(236, 72, 153, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.30);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    animation:
+        birthdayCardPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+        birthdayGlow 2.6s ease-in-out infinite alternate;
+}
+
+.birthday-special-icon {
+    font-size: 3.4rem;
+    margin-bottom: 12px;
+    display: block;
+    animation: birthdayCakeBounce 1.8s ease-in-out infinite;
+}
+
+.birthday-special-card h2 {
+    margin: 0 0 16px;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 800;
+    color: var(--title-color, #4c1d95);
+    text-shadow: 0 0 18px rgba(236, 72, 153, 0.28);
+}
+
+.birthday-special-card p {
+    color: var(--text-color, #2d1b69);
+    font-size: 1.05rem;
+    line-height: 1.75;
+    margin: 10px auto;
+    max-width: 560px;
+}
+
+.birthday-wish-text {
+    font-weight: 700;
+    font-size: 1.08rem !important;
+    color: #ec4899 !important;
+    margin-top: 18px !important;
+    padding: 14px 20px;
+    border-radius: 16px;
+    background: rgba(236, 72, 153, 0.08);
+    border: 1px solid rgba(236, 72, 153, 0.20);
+}
+
+@keyframes birthdayCardPop {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.93);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes birthdayGlow {
+    from {
+        box-shadow:
+            0 24px 70px rgba(124, 58, 237, 0.18),
+            0 0 25px rgba(236, 72, 153, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+    to {
+        box-shadow:
+            0 28px 90px rgba(124, 58, 237, 0.28),
+            0 0 44px rgba(236, 72, 153, 0.26),
+            inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+}
+
+@keyframes birthdayCakeBounce {
+    0%, 100% { transform: translateY(0) rotate(-4deg); }
+    50%       { transform: translateY(-9px) rotate(4deg); }
+}
+
+/* Konfeti katmanı */
+.birthday-confetti-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    overflow: hidden;
+}
+
+/* Tek bir konfeti parçası */
+.birthday-confetti {
+    position: absolute;
+    top: -20px;
+    width: 9px;
+    height: 14px;
+    border-radius: 3px;
+    opacity: 0.92;
+    animation: birthdayConfettiFall linear forwards;
+}
+
+@keyframes birthdayConfettiFall {
+    to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Koyu mod */
+body.dark-mode .birthday-special-card {
+    background:
+        radial-gradient(circle at 20% 10%, rgba(236, 72, 153, 0.18), transparent 35%),
+        radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.28), transparent 35%),
+        rgba(20, 5, 35, 0.44);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+body.dark-mode .birthday-special-card h2 {
+    color: #f5f3ff;
+    text-shadow: 0 0 20px rgba(236, 72, 153, 0.40);
+}
+
+body.dark-mode .birthday-special-card p {
+    color: #d8b4fe;
+}
+
+body.dark-mode .birthday-wish-text {
+    background: rgba(236, 72, 153, 0.14);
+    border-color: rgba(236, 72, 153, 0.28);
+}
+
+/* Mobil */
+@media (max-width: 600px) {
+    .birthday-special-card {
+        padding: 24px 18px;
+        border-radius: 24px;
+    }
+
+    .birthday-special-card h2 {
+        font-size: 1.3rem;
+    }
+
+    .birthday-special-card p {
+        font-size: 0.96rem;
+    }
+
+    .birthday-special-icon {
+        font-size: 2.8rem;
+    }
+}

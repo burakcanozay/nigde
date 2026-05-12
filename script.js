@@ -124,12 +124,15 @@ function updateAllCounters() {
     const bdayCountdownEl = document.getElementById("birthdayCountdown");
     const bdayMessageEl = document.getElementById("birthdayMessage");
 
-    if (now.getMonth() === birthdayMonth - 1 && now.getDate() === birthdayDay) {
+    if (isBirthdayToday(now) || _birthdayManualTrigger) {
+        // Doğum günü özel ekranını göster
         if (bdayCountdownEl) bdayCountdownEl.style.display = "none";
-        if (bdayMessageEl) bdayMessageEl.style.display = "block";
+        if (bdayMessageEl)   bdayMessageEl.style.display   = "none";
+        showBirthdaySpecial();
     } else {
+        hideBirthdaySpecial();
         if (bdayCountdownEl) bdayCountdownEl.style.display = "flex";
-        if (bdayMessageEl) bdayMessageEl.style.display = "none";
+        if (bdayMessageEl)   bdayMessageEl.style.display   = "none";
         const d = document.getElementById("days");
         const h = document.getElementById("hours");
         const m = document.getElementById("minutes");
@@ -167,6 +170,95 @@ function updateAllCounters() {
 
 setInterval(updateAllCounters, 1000);
 document.addEventListener("DOMContentLoaded", updateAllCounters);
+
+/* =========================================
+   DOĞUM GÜNÜ MODÜLÜ
+========================================= */
+
+const _BDAY_MONTH = 5;   // Mayıs
+const _BDAY_DAY   = 13;  // 13. gün  ← buradan kolayca değiştir
+
+let _birthdayManualTrigger = false; // Klavye ile tetikleme için
+
+function isBirthdayToday(now) {
+    return now.getMonth() === _BDAY_MONTH - 1 && now.getDate() === _BDAY_DAY;
+}
+
+function showBirthdaySpecial() {
+    const specialCard = document.getElementById("birthdaySpecialCard");
+    if (!specialCard) return;
+    
+    if (specialCard.style.display !== "block") {
+        specialCard.style.display = "block";
+        // Kartı ekranın ortasına kaydır ki kullanıcı görsün
+        specialCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    
+    startBirthdayConfettiOnce();
+}
+
+function hideBirthdaySpecial() {
+    const specialCard = document.getElementById("birthdaySpecialCard");
+    if (specialCard && !_birthdayManualTrigger) {
+        specialCard.style.display = "none";
+    }
+}
+
+let _birthdayConfettiStarted = false;
+
+function startBirthdayConfettiOnce() {
+    if (_birthdayConfettiStarted) return;
+    _birthdayConfettiStarted = true;
+
+    const layer = document.getElementById("birthdayConfettiLayer");
+    if (!layer) return;
+
+    const colors = ["#ec4899", "#a78bfa", "#7c3aed", "#facc15", "#fce7f3", "#c084fc"];
+
+    for (let i = 0; i < 70; i++) {
+        setTimeout(() => {
+            const piece = document.createElement("div");
+            piece.className = "birthday-confetti";
+            piece.style.left            = Math.random() * 100 + "vw";
+            piece.style.background      = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.animationDuration = (Math.random() * 2 + 3) + "s";
+            piece.style.transform       = `rotate(${Math.random() * 360}deg)`;
+            layer.appendChild(piece);
+            setTimeout(() => piece.remove(), 5600);
+        }, i * 40);
+    }
+
+    if (typeof createExplosionHeart === "function") {
+        for (let i = 0; i < 18; i++) {
+            setTimeout(createExplosionHeart, Math.random() * 900);
+        }
+    }
+}
+
+// ===== KLAVYEDEN "BIRTHDAY" YAZINCA TETİKLE =====
+let _bdayInputBuffer = "";
+const _bdayTargetWord = "birthday";
+
+document.addEventListener("keydown", (e) => {
+    // Sadece harf tuşlarını dikkate al
+    if (e.key.length === 1) {
+        _bdayInputBuffer += e.key.toLowerCase();
+        
+        // Sadece hedef kelime uzunluğu kadar tut
+        if (_bdayInputBuffer.length > _bdayTargetWord.length) {
+            _bdayInputBuffer = _bdayInputBuffer.substring(_bdayInputBuffer.length - _bdayTargetWord.length);
+        }
+        
+        // Kelime eşleşti mi?
+        if (_bdayInputBuffer === _bdayTargetWord) {
+            _birthdayManualTrigger = true;
+            _birthdayConfettiStarted = false; // Konfeti tekrar patlasın
+            showBirthdaySpecial();
+            _bdayInputBuffer = ""; // Buffer'ı temizle
+            console.log("Doğum günü sürprizi aktif edildi! 🎂💜");
+        }
+    }
+});
 
 // Havada Süzülen Kalpler Efekti
 function createHeart() {
